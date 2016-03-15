@@ -1,0 +1,185 @@
+$tableBorderColor: #000000;
+$linkColor: #0000cc;
+$headerTitleColor: #226688;
+$headerTitleHoverColor: #cc0000;
+$navigationBackgroundColor: #ccddff; 
+$navigationBackgroundHoverColor: #ffd24d;
+
+/**
+ * Main styles
+ */
+
+div#wrapper {
+    min-width: 320px;
+    max-width: 940px;
+    margin: 0 auto;
+}
+
+header {
+    h1 {
+        a {
+            color: $headerTitleColor;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            color: $headerTitleHoverColor;
+        }
+        
+        margin: 2%;
+        font-size: 1.5em;
+    }
+}
+
+h2 {
+    margin: 2%;
+}
+
+p {
+    a {
+        color: blue;
+        text-decoration: none;
+        font-weight: bold;
+
+        border: solid 1px black;
+        border-radius: 20px;
+        display: inline-block;
+        
+        padding: 20px;
+        background-color: $navigationBackgroundColor;
+    }
+    
+    a:hover {
+        background-color: $navigationBackgroundHoverColor;
+    }
+    
+    margin-left: 2%;
+}
+
+
+table.smallTable {
+    caption {
+        font-weight: bold;
+        font-size: 1.4em;
+    }
+
+    tr.blankRow {
+        height: 20px;
+
+            border-style: none;
+        td {
+            border-style: none;
+        }
+    }
+    
+    th {
+        text-align: left;
+    }
+
+    td, th, tr {
+        border: solid 1px $tableBorderColor;
+    }
+
+    td {
+        a {
+            text-decoration: none;
+            color: $linkColor;
+            display: inline-block;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+            padding: 5px 5px;
+            box-sizing: border-box;
+        }
+        a:hover {
+            background-color: pink;
+        }
+
+        width: 95%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+    }
+    td.rank, td.hits, td.added {
+        padding: 5px;
+    }
+
+    th {
+        padding: 5px;
+        width: 25%;
+    }
+
+    width: 95%;
+    margin: 20px auto;
+    padding: 0;
+    table-layout: fixed;
+    font-size: 0.8em;
+}
+
+table.bigTable {
+    @extend .smallTable;
+
+    tr:nth-child(even) {
+        background-color: #eeeeee;        
+    }
+
+    .rank {
+        width: 5%;
+    }
+    .fullURL {
+        width: 40%;
+    }
+    .customURL {
+        width: 40%;
+    }
+    .hits {
+        width: 10%;
+    }
+
+    display: none;
+    font-size: 1em;
+}
+
+footer {
+    text-align: center;
+}
+
+/**
+ * Home page styles
+ */
+form#addWebsite {
+    label {
+        display: inline-block;
+        width: 150px;
+        margin: 5px 0;
+    }
+
+    input[type="text"] {
+        display: block;
+        width: 90%;
+    }
+
+    fieldset {
+        border: solid 2px black;
+    }
+    width: 96%;
+    margin: 0 auto;
+}
+
+/**
+ * All results page styles
+ */
+form#filterResultsForm {
+    @extend #addWebsite;
+
+    label {
+        width: 90px;
+    }
+
+    input[type="text"] {
+        display: initial;
+        width: initial;
+    }
+}
+

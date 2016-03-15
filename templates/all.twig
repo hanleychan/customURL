@@ -1,0 +1,76 @@
+{% import "macros.twig" as tables %}
+
+{% extends 'layout.twig' %}
+{% block content %}
+<h2>All Entries</h2>
+
+<p><a href="{{ path_for('home') }}">Return to homepage</a></p>
+
+<section id="filterResults">
+    <form id="filterResultsForm" action"#" method="get">
+        <fieldset>
+            <legend>Filters: </legend>
+            <label for="search">Search: </label>
+            <input type="text" id="search" name="search"{% if search %} value="{{ search }}"{%endif%}><br><br>
+            <label for="sort">Sort: </label>
+            <select id="sort" name="sort">
+                <option value="added"{% if sort == "added" or not sort %} selected{% endif %}>Added</option>
+                <option value="hits"{% if sort == "hits" %} selected{% endif %}>Hits</option>
+                <option value="fullURL"{% if sort == "fullURL" %} selected{% endif %}>Full URL</option>
+                <option value="customURL"{% if sort == "customURL" %} selected{% endif%}>Custom URL</option>
+            </select>
+            <select id="sortOrder" name="sortOrder">
+                <option value="desc" selected>Desc</option>
+                <option value="asc">Asc</option>
+            </select><br><br>
+            <input type="submit" value="Apply Filters">
+        </fieldset>
+    </form>
+</section>
+
+<section id="results">
+    <table id="addResultsSmall" class="smallTable">
+        <caption>Results</caption>
+        {% for result in allResults %}
+            {{ tables.tableSmallRow('#', 'rank', loop.index) }}
+            {{ tables.tableSmallRow('Full URL', 'fullURL', result.url, true) }}
+            {{ tables.tableSmallRow('Custom URL', 'customURL', baseURL ~ result.shortname, true) }}
+            {{ tables.tableSmallRow('Hits', 'hits', result.hits) }}
+            {{ tables.tableSmallRow('Added', 'added', result.added|slice(0,10)) }}
+
+            <tr class="blankRow"><td colspan="2"></td></tr>
+        {% endfor %}
+    </table>
+
+    <table id="allResultsBig" class="bigTable">
+        <caption>Results</caption>
+        <tr>
+            <th class="rank">#</th>
+            <th class="fullURL">Full URL</th>
+            <th class="customURL">Custom URL</th>
+            <th class="hits">Hits</th>
+            <th class="added">Added</th>
+        </tr>
+        {% for result in allResults %}
+            {{ tables.tableBigRow(loop.index, result.url, baseURL ~ result.shortname, result.hits, result.added|slice(0,10)) }} 
+        {% endfor %}
+    </table>
+</section>
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+
+    <script>
+    {% if sortOrder == "desc" or not sortOrder %}
+        var sortOrderValue = "desc";
+    {% else %}
+        var sortOrderValue = "asc";
+    {% endif %}
+    </script>
+
+    <script src="js/all.js"></script>
+{% endblock %}
+

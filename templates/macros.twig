@@ -1,0 +1,16 @@
+{% macro tableSmallRow(heading, class, value, valueIsLink) %}
+    <tr>
+        <th>{{ heading }}</th>
+        <td class="{{ class }}">{% if valueIsLink == true %}<a href="{{ value }}" title="{{ value }}">{% endif %}{{ value }}{% if valueIsLink == true %}</a>{% endif %}</td>
+    </tr>
+{% endmacro %}
+
+{% macro tableBigRow(rank, url, customURL, hits, added) %}
+    <tr>
+        <td class="rank">{{ rank }}</td>
+        <td class="fullURL"><a href="{{ url }}" title="{{ url }}">{{ url }}</a></td>
+        <td class="customURL"><a href="{{ customURL}}" title="{{ customURL }}">{{ customURL }}</a></td>
+        <td class="hits">{{ hits }}</td>
+        <td class="added">{{ added }}</td>
+    </tr>
+{% endmacro %}

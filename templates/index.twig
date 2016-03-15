@@ -1,0 +1,84 @@
+{% import "macros.twig" as tables %}
+
+{% extends 'layout.twig' %}
+{% block content %}
+
+    <section id="addWebsite">
+        <form id="addWebsite" action="{{ path_for('addURL') }}" method="post">
+
+            <fieldset>
+                <legend>Add a Website: </legend>
+                {% for message in flash.message("success") %}
+                <p class="success">{{ message }}</p>
+                {% endfor %}
+                {% for message in flash.message("fail") %}
+                <p class="fail">{{ message }}</p>
+                {% endfor %}
+
+                <label for="url">URL: </label>
+                <input type="text" id="url" name="url" maxlength="2083" required><br>
+                <label for="shortName">Custom Name: </label>
+                <input type="text" id="shortName" name="shortName" maxlength="50" required><br>
+                <input type="submit" value="Add">
+            </fieldset>
+        </form>
+
+        <p>
+            <a href="{{ path_for('all') }}">View all entries</a>
+        </p>
+    </section>
+
+    <section id="results">
+        <table class="smallTable" id="latestTenSmall">
+            <caption>Latest Results</caption>
+            {% for latestResult in latestResults %}
+                {{ tables.tableSmallRow('#', 'rank', loop.index) }}
+                {{ tables.tableSmallRow('Full URL', 'fullURL', latestResult.url, true) }}
+                {{ tables.tableSmallRow('Custom URL', 'customURL',  baseURL ~ latestResult.shortname, true) }}
+                {{ tables.tableSmallRow('Hits', 'hits', latestResult.hits) }}
+                {{ tables.tableSmallRow('Added', 'added', latestResult.added|slice(0,10)) }}
+                <tr class="blankRow"><td colspan="2"></td></tr>
+            {% endfor %}
+        </table>
+
+        <table class="smallTable" id="topTenSmall">
+            <caption>Top Results</caption>
+            {% for topResult in topResults %}
+                {{ tables.tableSmallRow('#', 'rank', loop.index) }}
+                {{ tables.tableSmallRow('Full URL', 'fullURL', topResult.url, true) }}
+                {{ tables.tableSmallRow('Custom URL', 'customURL', baseURL ~ topResult.shortname, true) }}
+                {{ tables.tableSmallRow('Hits', 'hits', topResult.hits) }}
+                {{ tables.tableSmallRow('Added', 'added', topResult.added|slice(0,10)) }}
+                <tr class="blankRow"><td colspan="2"></td></tr>
+            {% endfor %}
+        </table>
+
+        <table id="latestTenBig" class="bigTable">
+            <caption>Lastest Results</caption>
+            <tr>
+                <th class="rank">#</th>
+                <th class="fullURL">Full URL</th>
+                <th class="customURL">Custom URL</th>
+                <th class="hits">Hits</th>
+                <th class="added">Added</th>
+            </tr>
+            {% for latestResult in latestResults %}
+                {{ tables.tableBigRow(loop.index, latestResult.url, baseURL ~ latestResult.shortname, latestResult.hits, latestResult.added|slice(0,10)) }} 
+            {% endfor %}
+        </table>
+
+        <table id="topTenBig" class="bigTable">
+            <caption>Top Results</caption>
+            <tr>
+                <th class="rank">#</th>
+                <th class="fullURL">Full URL</th>
+                <th class="customURL">Custom URL</th>
+                <th class="hits">Hits</th>
+                <th class="added">Added</th>
+            </tr>
+            {% for topResult in topResults %}
+                {{ tables.tableBigRow(loop.index, topResult.url, baseURL ~ topResult.shortname, topResult.hits, topResult.added|slice(0,10)) }}
+            {% endfor %}
+        </table>
+    </section>
+{% endblock %}
