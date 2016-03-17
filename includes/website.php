@@ -91,11 +91,11 @@ class Website extends DatabaseObject {
     /**
      * Returns an array of website objects filtered by a search value
      */  
-    public static function getBySearch($db, $search="", $sort="added", $sortOrder="desc") {
+    public static function getByFilter($db, $limit=10, $offset=0, $search="", $sort="added", $sortOrder="desc") {
         $safeSort = self::getSortColumnValue($sort);
         $safeSortOrder = self::getSortOrderValue($sortOrder);
 
-        $sql = "SELECT * FROM " . self::$table_name . " WHERE url LIKE ? OR shortname LIKE ? ORDER BY {$safeSort} {$safeSortOrder}";
+        $sql = "SELECT * FROM " . self::$table_name . " WHERE url LIKE ? OR shortname LIKE ? ORDER BY {$safeSort} {$safeSortOrder} LIMIT {$offset}, {$limit}";
         $paramArray = array("%$search%", "%$search%");
         
         $result = self::findBySql($db, $sql, $paramArray);
@@ -107,20 +107,43 @@ class Website extends DatabaseObject {
             return false;
         }
     }
+
+    public static function getNumEntriesFromFilter($db, $search="", $sort="added", $sortOrder="desc") {
+        $safeSort = self::getSortColumnValue($sort);
+        $safeSortOrder = self::getSortOrderValue($sortOrder);
+
+        $sql = "SELECT COUNT(*) FROM " . self::$table_name . " WHERE url LIKE ? OR shortname LIKE ? ORDER BY {$safeSort} {$safeSortOrder} LIMIT 1";
+        $paramArray = array("%$search%", "%$search%");
+
+        try {
+            $result = $db->prepare($sql); 
+            $result->execute($paramArray);
+        }
+        catch(Exception $e) {
+            die($e->getMessage());
+        }
+
+        if($result) {
+            return (int)$result->fetch(PDO::FETCH_NUM)[0];
+        }
+        else {
+            return 0;
+        }
+    }
     
     /**
      * Returns all websites sorted by a specified column 
      */
-     public static function getAllSorted($db, $sort="added", $sortOrder="DESC") {
+     public static function getAllSorted($db, $limit=10, $offset, $sort="added", $sortOrder="DESC") {
         $safeSort = self::getSortColumnValue($sort);
         $safeSortOrder = self::getSortOrderValue($sortOrder);
 
-        $sql = "SELECT * FROM " . self::$table_name . " ORDER BY {$safeSort} {$safeSortOrder}";
+        $sql = "SELECT * FROM " . self::$table_name . " ORDER BY {$safeSort} {$safeSortOrder} LIMIT {$offset}, {$limit}";
         
-        $results = self::findBySql($db, $sql);
+        $result = self::findBySql($db, $sql);
         
-        if($results) {
-            return $results;
+        if($result) {
+            return $result;
         }
         else {
             return false;
@@ -162,3 +185,4 @@ class Website extends DatabaseObject {
 }
 
 ?>
+

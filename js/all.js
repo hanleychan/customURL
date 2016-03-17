@@ -1,7 +1,11 @@
 var sort = $("#sort");
 var sortOrder = $("#sortOrder");
+var pageSelectSmall = $("#pageSelectSmall");
 
-function updateSortOrder() {
+/**
+ * Updates selectable sort order values when the sort select input is changed 
+ */
+function updateSortOrder(sortValueChanged) {
     var optionOneValue;
     var optionTwoValue;
     var optionOneText;
@@ -36,15 +40,50 @@ function updateSortOrder() {
     $optionOne.text(optionOneText);
     $optionTwo.text(optionTwoText);
 
-    if(sortOrderValue === optionOneValue) {
+    if(sortValueChanged) {
         $optionOne.prop("selected", true);
     }
     else {
-        $optionTwo.prop("selected", true);
+        if(sortOrderValue === optionOneValue) {
+            $optionOne.prop("selected", true);
+        }
+        else {
+            $optionTwo.prop("selected", true);
+        }
     }
 }
 
-sort.change(updateSortOrder);
-$(document).ready(updateSortOrder);
+/**
+ * Update selectable sort order values when the sort select input value is changed 
+ */
+sort.change(function() {
+    updateSortOrder(true)
+});
+
+
+/**
+ * Update sort and sort order when page loads 
+ */
+$(document).ready(function() {
+    updateSortOrder(false);
+});
+
+
+/**
+ * Redirects user to a different page
+ */
+pageSelectSmall.change(function() {
+    var pageURL = "?page=" + pageSelectSmall.val();
+
+    if(searchValue) {
+        pageURL += "&search=" + searchValue
+    }
+
+    if(!(sortValue === "added" && sortOrderValue === "desc")) {
+        pageURL += "&sort=" + sortValue + "&sortOrder=" + sortOrderValue;
+    }
+
+    window.location = pageURL;
+});
 
 

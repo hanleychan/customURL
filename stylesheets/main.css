@@ -18,10 +18,10 @@ header h1 {
 h2 {
   margin: 2%; }
 
-p {
+p#link {
   margin-left: 2%; }
-  p a {
-    color: blue;
+  p#link a {
+    color: #0000cc;
     text-decoration: none;
     font-weight: bold;
     border: solid 1px black;
@@ -29,7 +29,7 @@ p {
     display: inline-block;
     padding: 20px;
     background-color: #ccddff; }
-  p a:hover {
+  p#link a:hover {
     background-color: #ffd24d; }
 
 table.smallTable, table.bigTable {
@@ -103,6 +103,8 @@ form#addWebsite, form#filterResultsForm {
   form#addWebsite input[type="text"], form#filterResultsForm input[type="text"] {
     display: block;
     width: 90%; }
+  form#addWebsite input[type="submit"], form#filterResultsForm input[type="submit"] {
+    margin-top: 10px; }
   form#addWebsite fieldset, form#filterResultsForm fieldset {
     border: solid 2px black; }
 
@@ -114,3 +116,31 @@ form#filterResultsForm label {
 form#filterResultsForm input[type="text"] {
   display: initial;
   width: initial; }
+
+div#paginationBig {
+  display: none; }
+  div#paginationBig a {
+    text-decoration: none;
+    color: #0000cc; }
+  div#paginationBig span.page {
+    display: inline-block;
+    border: solid 1px black;
+    border-radius: 5px;
+    padding: 5px;
+    min-width: 25px;
+    text-align: center; }
+  div#paginationBig span.page:hover {
+    background-color: #ffff80; }
+  div#paginationBig span#currentPage {
+    background-color: #ff8533; }
+  div#paginationBig p {
+    margin-left: 2%; }
+
+div#paginationSmall {
+  margin: 0 auto;
+  display: block;
+  text-align: center; }
+  div#paginationSmall a {
+    text-decoration: none; }
+  div#paginationSmall img {
+    vertical-align: middle; }

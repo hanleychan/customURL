@@ -4,24 +4,43 @@ class Pagination {
     public $numItemsPerPage;
     public $currentPage;
 
-    public function __construct($numItems = 0, $numItemsPerPage = 1, $currentPage = 1) {
+    public function __construct($numItems = 0, $numItemsPerPage = 10, $currentPage = 1) {
         $this->numItems = $numItems;
         $this->numItemsPerPage = $numItemsPerPage;
-        $this->currentPage = $currentPage;
+
+        if($currentPage <= $this->getNumPages() && $currentPage >= 1) {
+            $this->currentPage = $currentPage;
+        }
+        else if($currentPage < 1) {
+            $this->currentPage = 1;
+        }
+        else {
+            $this->currentPage = $this->getNumPages();
+        }
     }
 
     /**
      * Returns whether there is a page after the current page
      */
     public function hasNextPage() {
-        return ($this->currentPage === $this->getNumPages()) ? false : true;
+        if($this->currentPage < $this->getNumPages()) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
      * Returns whether there is a page before the current page
      */
     public function hasPrevPage() {
-        return ($this->currentPage === 1) ? false : true;
+        if($this->currentPage - 1 != 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
@@ -29,6 +48,10 @@ class Pagination {
      */
     public function getNumPages() {
         return ceil($this->numItems / $this->numItemsPerPage);
+    }
+
+    public function calculateOffset() {
+        return ($this->numItemsPerPage * $this->currentPage) - $this->numItemsPerPage;
     }
 }
 

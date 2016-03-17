@@ -4,6 +4,8 @@ $headerTitleColor: #226688;
 $headerTitleHoverColor: #cc0000;
 $navigationBackgroundColor: #ccddff; 
 $navigationBackgroundHoverColor: #ffd24d;
+$paginationSelectedPageBackgroundColor: #ff8533;
+$paginationHoverBackgroundColor: #ffff80;
 
 /**
  * Main styles
@@ -35,13 +37,13 @@ h2 {
     margin: 2%;
 }
 
-p {
+p#link {
     a {
-        color: blue;
+        color: $linkColor;
         text-decoration: none;
         font-weight: bold;
 
-        border: solid 1px black;
+        border: solid 1px $tableBorderColor;
         border-radius: 20px;
         display: inline-block;
         
@@ -160,8 +162,12 @@ form#addWebsite {
         width: 90%;
     }
 
+    input[type="submit"] {
+        margin-top: 10px;
+    }
+
     fieldset {
-        border: solid 2px black;
+        border: solid 2px $tableBorderColor;
     }
     width: 96%;
     margin: 0 auto;
@@ -183,3 +189,42 @@ form#filterResultsForm {
     }
 }
 
+div#paginationBig {
+    a {
+        text-decoration: none;       
+        color: $linkColor;
+    }
+    span.page {
+        display: inline-block;
+        border: solid 1px $tableBorderColor;
+        border-radius: 5px;
+        padding: 5px;
+        min-width: 25px;
+        text-align: center;
+    }
+    span.page:hover {
+        background-color: $paginationHoverBackgroundColor;
+    }
+    span#currentPage {
+        background-color: $paginationSelectedPageBackgroundColor;
+    }
+
+    p {
+        margin-left: 2%;
+    }
+
+    display: none;
+}
+
+div#paginationSmall {
+    a {
+        text-decoration: none;
+    }
+    img {
+        vertical-align: middle;
+    }
+
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+}

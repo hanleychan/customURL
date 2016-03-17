@@ -14,3 +14,10 @@
         <td class="added">{{ added }}</td>
     </tr>
 {% endmacro %}
+
+{% macro paginationLink(page, currentPage, search, sort, sortOrder) %}
+    <a href="?page={{ page }}{% if search %}&search={{ search }}{% endif %}{% if not(sort=="added" and sortOrder=="desc") %}{% if sort %}&sort={{sort}}{% endif %}{% if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}">
+        <span class="page"{% if currentPage == page %} id="currentPage"{% endif %}>{{ page }}</span>
+    </a>
+{% endmacro %}
+

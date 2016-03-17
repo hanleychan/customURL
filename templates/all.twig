@@ -1,17 +1,17 @@
-{% import "macros.twig" as tables %}
+{% import "macros.twig" as macros %}
 
 {% extends 'layout.twig' %}
 {% block content %}
 <h2>All Entries</h2>
 
-<p><a href="{{ path_for('home') }}">Return to homepage</a></p>
+<p id="link"><a href="{{ path_for('home') }}">Return to homepage</a></p>
 
 <section id="filterResults">
     <form id="filterResultsForm" action"#" method="get">
         <fieldset>
             <legend>Filters: </legend>
             <label for="search">Search: </label>
-            <input type="text" id="search" name="search"{% if search %} value="{{ search }}"{%endif%}><br><br>
+            <input type="text" id="search" name="search"{% if search %} value="{{ search }}"{%endif%}><br>
             <label for="sort">Sort: </label>
             <select id="sort" name="sort">
                 <option value="added"{% if sort == "added" or not sort %} selected{% endif %}>Added</option>
@@ -22,21 +22,92 @@
             <select id="sortOrder" name="sortOrder">
                 <option value="desc" selected>Desc</option>
                 <option value="asc">Asc</option>
-            </select><br><br>
-            <input type="submit" value="Apply Filters">
-        </fieldset>
-    </form>
+            </select><br> <input type="submit" value="Apply Filters"> </fieldset> </form>
+</section>
+
+<section id="pageSelect">
+    <div id="paginationSmall">
+        <p>
+            {% if pages.hasPrevPage() %}
+                <a href="?page={{ pages.currentPage - 1 }}{% if search %}&search={{ search }}{% endif %}{% if not (sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{%if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}">
+                    <img src="images/leftArrow.png" alt="prevPage">
+                </a>
+            {% else %}
+                <img src="images/leftArrowGrey.png" alt="prevPage">
+            {% endif %}
+            <select id="pageSelectSmall" name="pageSelectSmall">
+            {% if pages.getNumPages() != 0 %}
+                {% for page in range(1, pages.getNumPages()) %}
+                    <option value="{{ page }}"{% if page == pages.currentPage %} selected {% endif %}>{{ page }} of {{ pages.getNumPages() }}</option>
+                {% endfor %}
+            {% endif %}
+            </select>
+            {% if pages.hasNextPage() %}
+                <a href="?page={{ pages.currentPage + 1}}{% if search %}&search={{ search }}{% endif %}{% if not(sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{% if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}">
+                    <img src="images/rightArrow.png" alt="nextPage">
+                </a>
+            {% else %}
+                <img src="images/rightArrowGrey.png" alt="nextPage">
+            {% endif %}
+        </p>
+    </div>
+
+    <div id="paginationBig">
+        <p>
+            {% if pages.hasPrevPage() %}
+                <a href="?page={{ pages.currentPage - 1 }}{% if search %}&search={{ search }}{% endif %}{% if not (sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{%if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}">
+                    <span class="page">Prev</span>
+                </a>
+            {% endif %}
+            
+            {% if pages.getNumPages() <= 10 %}
+                {% if pages.getNumPages() != 0 %}
+                    {% for page in range(1, pages.getNumPages()) %}
+                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder) }}
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                {% if pages.currentPage <= 6 %}
+                    {% for page in range(1,10) %}
+                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder) }}
+                    {% endfor %}
+                    ...
+                    {{ macros.paginationLink(pages.getNumPages(), pages.currentPage, search, sort, sortOrder) }}
+                {% elseif pages.currentPage >= pages.getNumPages() - 5 %}
+                    {{ macros.paginationLink(1, pages.currentPage, search, sort, sortOrder) }} 
+                    ...
+                    {% for page in range(pages.getNumPages() - 9, pages.getNumPages()) %}
+                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder) }}
+                    {% endfor %}
+                {% else %}
+                    {{ macros.paginationLink(1, pages.currentPage, search, sort, sortOrder) }} 
+                    ...
+                    {% for page in range(pages.currentPage-4, pages.currentPage+4) %}
+                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder) }}
+                    {% endfor %}
+                    ... 
+                    {{ macros.paginationLink(pages.getNumPages(), pages.currentPage, search, sort, sortOrder) }} 
+                {% endif %}
+            {% endif %}
+            {% if pages.hasNextPage() %}
+                <a href="?page={{ pages.currentPage + 1}}{% if search %}&search={{ search }}{% endif %}{% if not(sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{% if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}">
+                    <span class="page">Next</span>
+                </a>
+            {% endif %}
+        </p>
+    </div>
+
 </section>
 
 <section id="results">
     <table id="addResultsSmall" class="smallTable">
         <caption>Results</caption>
         {% for result in allResults %}
-            {{ tables.tableSmallRow('#', 'rank', loop.index) }}
-            {{ tables.tableSmallRow('Full URL', 'fullURL', result.url, true) }}
-            {{ tables.tableSmallRow('Custom URL', 'customURL', baseURL ~ result.shortname, true) }}
-            {{ tables.tableSmallRow('Hits', 'hits', result.hits) }}
-            {{ tables.tableSmallRow('Added', 'added', result.added|slice(0,10)) }}
+            {{ macros.tableSmallRow('#', 'rank', loop.index + pages.calculateOffset()) }}
+            {{ macros.tableSmallRow('Full URL', 'fullURL', result.url, true) }}
+            {{ macros.tableSmallRow('Custom URL', 'customURL', baseURL ~ result.shortname, true) }}
+            {{ macros.tableSmallRow('Hits', 'hits', result.hits) }}
+            {{ macros.tableSmallRow('Added', 'added', result.added|slice(0,10)) }}
 
             <tr class="blankRow"><td colspan="2"></td></tr>
         {% endfor %}
@@ -52,11 +123,10 @@
             <th class="added">Added</th>
         </tr>
         {% for result in allResults %}
-            {{ tables.tableBigRow(loop.index, result.url, baseURL ~ result.shortname, result.hits, result.added|slice(0,10)) }} 
+            {{ macros.tableBigRow(loop.index + pages.calculateOffset(), result.url, baseURL ~ result.shortname, result.hits, result.added|slice(0,10)) }} 
         {% endfor %}
     </table>
 </section>
-
 
 {% endblock %}
 
@@ -64,10 +134,22 @@
     <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
 
     <script>
-    {% if sortOrder == "desc" or not sortOrder %}
-        var sortOrderValue = "desc";
+    {% if search %}
+        var searchValue = "{{ search }}";
     {% else %}
-        var sortOrderValue = "asc";
+        var searchValue = false;
+    {% endif %}
+
+    {% if sort %}
+        var sortValue = "{{ sort }}";
+    {% else %}
+        var sortValue = "added";
+    {% endif %}
+
+    {% if sortOrder %}
+        var sortOrderValue = "{{ sortOrder }}";
+    {% else %}
+        var sortOrderValue = "desc";
     {% endif %}
     </script>
 

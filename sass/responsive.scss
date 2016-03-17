@@ -19,4 +19,12 @@
     table.bigTable {
         display: table;
     }
+
+    div#paginationBig {
+        display: initial;
+    }
+
+    div#paginationSmall {
+        display: none;
+    }
 }

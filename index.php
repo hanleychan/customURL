@@ -10,6 +10,7 @@ $app = new \Slim\App();
 // Get container
 $container = $app->getContainer();
 
+
 // Register component on container
 $container['view'] = function ($container) {
     $view = new \Slim\Views\Twig('templates', [
@@ -23,16 +24,19 @@ $container['view'] = function ($container) {
     return $view;
 };
 
+
 // Register provider
 $container['flash'] = function () {
     return new \Slim\Flash\Messages();
 };
+
 
 // Add middleware
 $app->add(function ($request, $response, $next) {
     $this->view->offsetSet('flash', $this->flash);
     return $next($request, $response);
 });
+
 
 // Homepage
 $app->get('/', function($request , $response, $args) use ($db) {
@@ -43,6 +47,7 @@ $app->get('/', function($request , $response, $args) use ($db) {
     return $this->view->render($response, 'index.twig', compact("latestResults", "topResults", "baseURL"));
 })->setName('home');
 
+
 // Show all entries page
 $app->get('/all', function($request, $response, $args) use ($db) {
     $baseURL = "http://" . $_SERVER["HTTP_HOST"] . BASE_URL;
@@ -50,16 +55,30 @@ $app->get('/all', function($request, $response, $args) use ($db) {
     $search = trim($request->getParam("search"));
     $sort = trim($request->getParam("sort"));
     $sortOrder = trim($request->getParam("sortOrder"));
+    $page = (int)trim($request->getParam("page"));
 
     if($search || $sort || $sortOrder) {
-        $allResults = Website::getBySearch($db, $search, $sort, $sortOrder);
+        $numItems = Website::getNumEntriesFromFilter($db, $search, $sort, $sortOrder);
     }
     else {
-        $allResults = Website::getAllSorted($db);
+        $numItems = Website::getTotalEntries($db);
     }
 
-    return $this->view->render($response, 'all.twig', compact("allResults", "baseURL", "search", "sort", "sortOrder"));
+    $numItemsPerPage = 10;
+    $pages = new Pagination($numItems, $numItemsPerPage, $page);
+    $limit = $pages->numItemsPerPage;
+    $offset = $pages->calculateOffset();
+
+    if($search || $sort || $sortOrder) {
+        $allResults = Website::getByFilter($db, $limit, $offset,$search, $sort, $sortOrder);
+    }
+    else {
+        $allResults = Website::getAllSorted($db, $limit, $offset);
+    }
+
+    return $this->view->render($response, 'all.twig', compact("allResults", "baseURL", "search", "sort", "sortOrder", "pages"));
 })->setName('all');
+
 
 // Redirect to the specified url
 $app->get('/{name}', function($request, $response, $args) use ($db) {
@@ -77,6 +96,7 @@ $app->get('/{name}', function($request, $response, $args) use ($db) {
         return $this->view->render($response, "invalid.twig", ["name"=>$name]);
     }
 });
+
 
 // Process adding a new website
 $app->post('/addURL', function($request, $response, $args) use ($db) {

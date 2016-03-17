@@ -10,4 +10,10 @@
     display: none; }
 
   table.bigTable {
-    display: table; } }
+    display: table; }
+
+  div#paginationBig {
+    display: initial; }
+
+  div#paginationSmall {
+    display: none; } }

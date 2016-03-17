@@ -8,6 +8,16 @@ class DatabaseObject {
     public function __construct($db) {
         $this->db = $db;
     }
+
+    /**
+     * Returns the total number of entries in the table 
+     */
+    public static function getTotalEntries($db) {
+        $sql = "SELECT count(*) FROM " . static::$table_name . " LIMIT 1";
+        $result = $db->query($sql);
+
+        return (int)$result->fetch()[0];
+    }
     
     /**
      * Queries the database and returns all entries in the table
