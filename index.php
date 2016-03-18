@@ -44,9 +44,9 @@ $app->get('/', function($request , $response, $args) use ($db) {
     $topResults = Website::getTopHits($db);
     $baseURL = "http://" . $_SERVER["HTTP_HOST"] . BASE_URL; 
 
-    if($_SESSION["post-data"]) {
-        $postData = $_SESSION["post-data"];
-        $_SESSION["post-data"] = null;
+    if(isset($_SESSION["postData"])) {
+        $postData = $_SESSION["postData"];
+        $_SESSION["postData"] = null;
     }
     else {
         $postData = null;
@@ -110,37 +110,42 @@ $app->get('/{name}', function($request, $response, $args) use ($db) {
 $app->post('/', function($request, $response, $args) use ($db) {
     $url = Website::addScheme(trim(strtolower($request->getParam('url'))));
     $shortName = trim(strtolower($request->getParam('shortName')));
+    $formError = false;
 
     // Make sure user entered URL is a valid format
     if(!Website::isValidURL($url)) {
         $this->flash->addMessage('fail', 'Error: Invalid URL input');
-        header("location: " . BASE_URL);
-        exit;
+        $formError = true;
     }
 
-    // Make sure user entered shortened name is a valid format
-    if(Website::isValidName($shortName)) {
-        // Make sure shortened name isn't already used
-        if(!Website::getWebsiteByName($db, $shortName)) {
-            // Create new database entry for the website
-            $website = new Website($db);
-            $website->url = $url;
-            $website->shortname = $shortName;
-            $website->hits = 0;
-            $website->added = date("Y-m-d H:i:s");
-            $website->save();
-    
-            $this->flash->addMessage('success', 'Website has been successfully added');
-        }
-        else {
-            $this->flash->addMessage('fail', 'Error: Custom name already exists');
-        }
+    // Make sure user entered a custom name in a valid format
+    if(!Website::isValidName($shortName)) {
+        $this->flash->addMessage('fail', 'Error: Invalid custom name');
+        $formError = true;
     }
     else {
-        $this->flash->addMessage('fail', 'Error: Invalid custom name');
+        // Make sure custom name isn't already used
+        if(Website::getWebsiteByName($db, $shortName)) {
+            $this->flash->addMessage('fail', 'Error: Custom name already exists');
+            $formError = true;
+        }
     }
 
-    $_SESSION["post-data"] = $_POST;
+    // Create new database entry for the website if no errors with input data
+    if(!$formError) {
+        $website = new Website($db);
+        $website->url = $url;
+        $website->shortname = $shortName;
+        $website->hits = 0;
+        $website->added = date("Y-m-d H:i:s");
+        $website->save();
+
+        $this->flash->addMessage('success', 'Website has been successfully added');
+    }
+    else {
+        $_SESSION["postData"] = $_POST;
+    }
+
     $router = $this->router;
     return $response->withRedirect($router->pathFor('home'));
 })->setName('addURL');

@@ -32,6 +32,12 @@ p#link {
   p#link a:hover {
     background-color: #ffd24d; }
 
+p.success {
+  color: #009900; }
+
+p.fail {
+  color: #ff3333; }
+
 table.smallTable, table.bigTable {
   width: 95%;
   margin: 20px auto;
@@ -67,8 +73,10 @@ table.smallTable, table.bigTable {
       box-sizing: border-box; }
     table.smallTable td a:hover, table.bigTable td a:hover {
       background-color: pink; }
-  table.smallTable td.rank, table.bigTable td.rank, table.smallTable td.hits, table.bigTable td.hits, table.smallTable td.added, table.bigTable td.added {
+  table.smallTable td.rank, table.bigTable td.rank, table.smallTable td.hits, table.bigTable td.hits, table.smallTable td.added, table.bigTable td.added, table.smallTable td.noData, table.bigTable td.noData {
     padding: 5px; }
+  table.smallTable td.noData, table.bigTable td.noData {
+    font-weight: bold; }
   table.smallTable th, table.bigTable th {
     padding: 5px;
     width: 25%; }
@@ -86,6 +94,8 @@ table.bigTable {
     width: 40%; }
   table.bigTable .hits {
     width: 10%; }
+  table.bigTable .noData {
+    padding: 10px; }
 
 footer {
   text-align: center; }

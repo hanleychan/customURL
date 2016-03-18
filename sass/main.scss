@@ -6,6 +6,8 @@ $navigationBackgroundColor: #ccddff;
 $navigationBackgroundHoverColor: #ffd24d;
 $paginationSelectedPageBackgroundColor: #ff8533;
 $paginationHoverBackgroundColor: #ffff80;
+$successColor: #009900;
+$failColor: #ff3333;
 
 /**
  * Main styles
@@ -58,6 +60,14 @@ p#link {
     margin-left: 2%;
 }
 
+p.success {
+    color: $successColor;
+}
+
+p.fail {
+    color: $failColor;
+}
+
 
 table.smallTable {
     caption {
@@ -103,8 +113,12 @@ table.smallTable {
         text-overflow: ellipsis;
         vertical-align: middle;
     }
-    td.rank, td.hits, td.added {
+    td.rank, td.hits, td.added, td.noData {
         padding: 5px;
+    }
+
+    td.noData {
+        font-weight: bold;
     }
 
     th {
@@ -137,6 +151,9 @@ table.bigTable {
     }
     .hits {
         width: 10%;
+    }
+    .noData {
+        padding: 10px;
     }
 
     display: none;

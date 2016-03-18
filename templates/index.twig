@@ -4,7 +4,6 @@
 {% block content %}
     <section id="addWebsite">
         <form id="addWebsite" action="{{ path_for('addURL') }}" method="post">
-
             <fieldset>
                 <legend>Add a Website: </legend>
                 {% for message in flash.message("success") %}
@@ -30,26 +29,34 @@
     <section id="results">
         <table class="smallTable" id="latestTenSmall">
             <caption>Latest Results</caption>
-            {% for latestResult in latestResults %}
-                {{ tables.tableSmallRow('#', 'rank', loop.index) }}
-                {{ tables.tableSmallRow('Full URL', 'fullURL', latestResult.url, true) }}
-                {{ tables.tableSmallRow('Custom URL', 'customURL',  baseURL ~ latestResult.shortname, true) }}
-                {{ tables.tableSmallRow('Hits', 'hits', latestResult.hits) }}
-                {{ tables.tableSmallRow('Added', 'added', latestResult.added|slice(0,10)) }}
-                <tr class="blankRow"><td colspan="2"></td></tr>
-            {% endfor %}
+            {% if not latestResults %}
+                <tr><td class="noData">No Data</td></tr>
+            {% else %}
+                {% for latestResult in latestResults %}
+                    {{ tables.tableSmallRow('#', 'rank', loop.index) }}
+                    {{ tables.tableSmallRow('Full URL', 'fullURL', latestResult.url, true) }}
+                    {{ tables.tableSmallRow('Custom URL', 'customURL',  baseURL ~ latestResult.shortname, true) }}
+                    {{ tables.tableSmallRow('Hits', 'hits', latestResult.hits) }}
+                    {{ tables.tableSmallRow('Added', 'added', latestResult.added|slice(0,10)) }}
+                    <tr class="blankRow"><td colspan="2"></td></tr>
+                {% endfor %}
+            {% endif %}
         </table>
 
         <table class="smallTable" id="topTenSmall">
             <caption>Top Results</caption>
-            {% for topResult in topResults %}
-                {{ tables.tableSmallRow('#', 'rank', loop.index) }}
-                {{ tables.tableSmallRow('Full URL', 'fullURL', topResult.url, true) }}
-                {{ tables.tableSmallRow('Custom URL', 'customURL', baseURL ~ topResult.shortname, true) }}
-                {{ tables.tableSmallRow('Hits', 'hits', topResult.hits) }}
-                {{ tables.tableSmallRow('Added', 'added', topResult.added|slice(0,10)) }}
-                <tr class="blankRow"><td colspan="2"></td></tr>
-            {% endfor %}
+            {% if not topResults %}
+                <tr><td class="noData">No Data</td></tr>
+            {% else %}
+                {% for topResult in topResults %}
+                    {{ tables.tableSmallRow('#', 'rank', loop.index) }}
+                    {{ tables.tableSmallRow('Full URL', 'fullURL', topResult.url, true) }}
+                    {{ tables.tableSmallRow('Custom URL', 'customURL', baseURL ~ topResult.shortname, true) }}
+                    {{ tables.tableSmallRow('Hits', 'hits', topResult.hits) }}
+                    {{ tables.tableSmallRow('Added', 'added', topResult.added|slice(0,10)) }}
+                    <tr class="blankRow"><td colspan="2"></td></tr>
+                {% endfor %}
+            {% endif %}
         </table>
 
         <table id="latestTenBig" class="bigTable">
@@ -61,9 +68,13 @@
                 <th class="hits">Hits</th>
                 <th class="added">Added</th>
             </tr>
-            {% for latestResult in latestResults %}
-                {{ tables.tableBigRow(loop.index, latestResult.url, baseURL ~ latestResult.shortname, latestResult.hits, latestResult.added|slice(0,10)) }} 
-            {% endfor %}
+            {% if not latestResults %}
+                <tr><td colspan="5" class="noData">No Data</td></tr>
+            {% else %}
+                {% for latestResult in latestResults %}
+                    {{ tables.tableBigRow(loop.index, latestResult.url, baseURL ~ latestResult.shortname, latestResult.hits, latestResult.added|slice(0,10)) }} 
+                {% endfor %}
+            {% endif %}
         </table>
 
         <table id="topTenBig" class="bigTable">
@@ -75,9 +86,13 @@
                 <th class="hits">Hits</th>
                 <th class="added">Added</th>
             </tr>
-            {% for topResult in topResults %}
-                {{ tables.tableBigRow(loop.index, topResult.url, baseURL ~ topResult.shortname, topResult.hits, topResult.added|slice(0,10)) }}
-            {% endfor %}
+            {% if not topResults %}
+                <tr><td colspan="5" class="noData">No Data</td></tr>
+            {% else %}
+                {% for topResult in topResults %}
+                    {{ tables.tableBigRow(loop.index, topResult.url, baseURL ~ topResult.shortname, topResult.hits, topResult.added|slice(0,10)) }}
+                {% endfor %}
+            {% endif %}
         </table>
     </section>
 {% endblock %}
