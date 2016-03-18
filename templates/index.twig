@@ -2,7 +2,6 @@
 
 {% extends 'layout.twig' %}
 {% block content %}
-
     <section id="addWebsite">
         <form id="addWebsite" action="{{ path_for('addURL') }}" method="post">
 
@@ -16,9 +15,9 @@
                 {% endfor %}
 
                 <label for="url">URL: </label>
-                <input type="text" id="url" name="url" maxlength="2083" required><br>
+                <input type="text" id="url" name="url" maxlength="2083"{% if postData %} value="{{ postData.url }}"{% endif %} required><br>
                 <label for="shortName">Custom Name: </label>
-                <input type="text" id="shortName" name="shortName" maxlength="50" required><br>
+                <input type="text" id="shortName" name="shortName" maxlength="50"{% if postData %} value="{{ postData.shortName }}"{% endif %} required><br>
                 <input type="submit" value="Add">
             </fieldset>
         </form>

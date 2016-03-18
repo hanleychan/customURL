@@ -44,7 +44,15 @@ $app->get('/', function($request , $response, $args) use ($db) {
     $topResults = Website::getTopHits($db);
     $baseURL = "http://" . $_SERVER["HTTP_HOST"] . BASE_URL; 
 
-    return $this->view->render($response, 'index.twig', compact("latestResults", "topResults", "baseURL"));
+    if($_SESSION["post-data"]) {
+        $postData = $_SESSION["post-data"];
+        $_SESSION["post-data"] = null;
+    }
+    else {
+        $postData = null;
+    }
+
+    return $this->view->render($response, 'index.twig', compact("latestResults", "topResults", "baseURL", "postData"));
 })->setName('home');
 
 
@@ -99,7 +107,7 @@ $app->get('/{name}', function($request, $response, $args) use ($db) {
 
 
 // Process adding a new website
-$app->post('/addURL', function($request, $response, $args) use ($db) {
+$app->post('/', function($request, $response, $args) use ($db) {
     $url = Website::addScheme(trim(strtolower($request->getParam('url'))));
     $shortName = trim(strtolower($request->getParam('shortName')));
 
@@ -132,8 +140,9 @@ $app->post('/addURL', function($request, $response, $args) use ($db) {
         $this->flash->addMessage('fail', 'Error: Invalid custom name');
     }
 
-    header("Location: " . BASE_URL);
-    exit;
+    $_SESSION["post-data"] = $_POST;
+    $router = $this->router;
+    return $response->withRedirect($router->pathFor('home'));
 })->setName('addURL');
 
 $app->run();
