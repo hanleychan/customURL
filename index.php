@@ -64,16 +64,33 @@ $app->get('/all', function($request, $response, $args) use ($db) {
     $sort = trim($request->getParam("sort"));
     $sortOrder = trim($request->getParam("sortOrder"));
     $page = (int)trim($request->getParam("page"));
+    $displayItems = trim($request->getParam("displayItems"));
+    $validDisplayValues = array(5,10,20,50,100,"all");
 
     if($search || $sort || $sortOrder) {
-        $numItems = Website::getNumEntriesFromFilter($db, $search, $sort, $sortOrder);
+        $totalItems = Website::getNumEntriesFromFilter($db, $search, $sort, $sortOrder);
     }
     else {
-        $numItems = Website::getTotalEntries($db);
+        $totalItems = Website::getTotalEntries($db);
     }
 
-    $numItemsPerPage = 10;
-    $pages = new Pagination($numItems, $numItemsPerPage, $page);
+    if($displayItems) {
+        if($displayItems === "all") {
+            $numItemsPerPage = $totalItems;
+        }
+        else if (in_array($displayItems, $validDisplayValues)) {
+            $numItemsPerPage = (int)$displayItems;
+        }
+        else {
+            $numItemsPerPage = 10;
+            $displayItems = 10;
+        }
+    }
+    else {
+        $numItemsPerPage = 10;
+    }
+
+    $pages = new Pagination($totalItems, $numItemsPerPage, $page);
     $limit = $pages->numItemsPerPage;
     $offset = $pages->calculateOffset();
 
@@ -84,8 +101,12 @@ $app->get('/all', function($request, $response, $args) use ($db) {
         $allResults = Website::getAllSorted($db, $limit, $offset);
     }
 
-    return $this->view->render($response, 'all.twig', compact("allResults", "baseURL", "search", "sort", "sortOrder", "pages"));
+    return $this->view->render($response, 'all.twig', compact("allResults", "baseURL", "search", "sort", "sortOrder", "pages", "displayItems"));
 })->setName('all');
+
+$app->get('/admin', function($request, $response, $args) use ($db) {
+    return 'admin';
+})->setName('admin');
 
 
 // Redirect to the specified url
@@ -108,7 +129,7 @@ $app->get('/{name}', function($request, $response, $args) use ($db) {
 
 // Process adding a new website
 $app->post('/', function($request, $response, $args) use ($db) {
-    $url = Website::addScheme(trim(strtolower($request->getParam('url'))));
+    $url = Website::addScheme(trim($request->getParam('url')));
     $shortName = trim(strtolower($request->getParam('shortName')));
     $formError = false;
 

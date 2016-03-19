@@ -60,7 +60,8 @@ table.smallTable, table.bigTable {
     width: 95%;
     overflow: hidden;
     text-overflow: ellipsis;
-    vertical-align: middle; }
+    vertical-align: middle;
+    white-space: nowrap; }
     table.smallTable td a, table.bigTable td a {
       text-decoration: none;
       color: #0000cc;
@@ -142,6 +143,7 @@ div#paginationBig {
   div#paginationBig span.page:hover {
     background-color: #ffff80; }
   div#paginationBig span#currentPage {
+    font-weight: bold;
     background-color: #ff8533; }
   div#paginationBig p {
     margin-left: 2%; }

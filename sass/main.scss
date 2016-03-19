@@ -112,6 +112,7 @@ table.smallTable {
         overflow: hidden;
         text-overflow: ellipsis;
         vertical-align: middle;
+        white-space: nowrap;
     }
     td.rank, td.hits, td.added, td.noData {
         padding: 5px;
@@ -223,6 +224,7 @@ div#paginationBig {
         background-color: $paginationHoverBackgroundColor;
     }
     span#currentPage {
+        font-weight: bold;
         background-color: $paginationSelectedPageBackgroundColor;
     }
 

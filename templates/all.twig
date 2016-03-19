@@ -22,7 +22,19 @@
             <select id="sortOrder" name="sortOrder">
                 <option value="desc" selected>Desc</option>
                 <option value="asc">Asc</option>
-            </select><br> <input type="submit" value="Apply Filters"> </fieldset> </form>
+            </select><br> 
+            <label for="displayItems"># per page: </label>
+            <select id="displayItems" name="displayItems">
+                <option value="5"{% if displayItems == 5 %} selected{% endif %}>5</option>
+                <option value="10"{% if not displayItems or displayItems == 10 %} selected{% endif %}>10</option>
+                <option value="20"{% if displayItems == 20 %} selected{% endif %}>20</option>
+                <option value="50"{% if displayItems == 50 %} selected{% endif %}>50</option>
+                <option value="100"{% if displayItems == 100 %} selected{% endif %}>100</option>
+                <option value="all"{% if displayItems == "all" %} selected{% endif %}>Show all</option>
+            </select><br>
+            <input type="submit" value="Apply Filters">
+        </fieldset>
+    </form>
 </section>
 
 <section id="pageSelect">
@@ -30,7 +42,7 @@
         {% if pages.numItems >= 1 %}
             <p>
                 {% if pages.hasPrevPage() %}
-                    <a href="?page={{ pages.currentPage - 1 }}{% if search %}&search={{ search }}{% endif %}{% if not (sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{%if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}">
+                    <a href="?page={{ pages.currentPage - 1 }}{% if search %}&search={{ search }}{% endif %}{% if not (sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{%if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}{% if displayItems and displayItems != 10 %}&displayItems={{ displayItems }}{% endif %}">
                         <img src="images/leftArrow.png" alt="prevPage">
                     </a>
                 {% else %}
@@ -44,7 +56,7 @@
                 {% endif %}
                 </select>
                 {% if pages.hasNextPage() %}
-                    <a href="?page={{ pages.currentPage + 1}}{% if search %}&search={{ search }}{% endif %}{% if not(sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{% if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}">
+                    <a href="?page={{ pages.currentPage + 1}}{% if search %}&search={{ search }}{% endif %}{% if not(sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{% if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}{% if displayItems and displayItems != 10 %}&displayItems={{ displayItems }}{% endif %}">
                         <img src="images/rightArrow.png" alt="nextPage">
                     </a>
                 {% else %}
@@ -57,7 +69,7 @@
     <div id="paginationBig">
         <p>
             {% if pages.hasPrevPage() %}
-                <a href="?page={{ pages.currentPage - 1 }}{% if search %}&search={{ search }}{% endif %}{% if not (sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{%if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}">
+                <a href="?page={{ pages.currentPage - 1 }}{% if search %}&search={{ search }}{% endif %}{% if not (sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{%if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}{% if displayItems and displayItems != 10 %}&displayItems={{ displayItems }}{% endif %}">
                     <span class="page">Prev</span>
                 </a>
             {% endif %}
@@ -65,34 +77,34 @@
             {% if pages.getNumPages() <= 10 %}
                 {% if pages.getNumPages() != 0 %}
                     {% for page in range(1, pages.getNumPages()) %}
-                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder) }}
+                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder, displayItems) }}
                     {% endfor %}
                 {% endif %}
             {% else %}
                 {% if pages.currentPage <= 6 %}
                     {% for page in range(1,10) %}
-                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder) }}
+                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder, displayItems) }}
                     {% endfor %}
                     ...
-                    {{ macros.paginationLink(pages.getNumPages(), pages.currentPage, search, sort, sortOrder) }}
+                    {{ macros.paginationLink(pages.getNumPages(), pages.currentPage, search, sort, sortOrder, displayItems) }}
                 {% elseif pages.currentPage >= pages.getNumPages() - 5 %}
-                    {{ macros.paginationLink(1, pages.currentPage, search, sort, sortOrder) }} 
+                    {{ macros.paginationLink(1, pages.currentPage, search, sort, sortOrder, displayItems) }} 
                     ...
                     {% for page in range(pages.getNumPages() - 9, pages.getNumPages()) %}
-                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder) }}
+                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder, displayItems) }}
                     {% endfor %}
                 {% else %}
-                    {{ macros.paginationLink(1, pages.currentPage, search, sort, sortOrder) }} 
+                    {{ macros.paginationLink(1, pages.currentPage, search, sort, sortOrder, displayItems) }} 
                     ...
                     {% for page in range(pages.currentPage-4, pages.currentPage+4) %}
-                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder) }}
+                        {{ macros.paginationLink(page, pages.currentPage, search, sort, sortOrder, displayItems) }}
                     {% endfor %}
                     ... 
-                    {{ macros.paginationLink(pages.getNumPages(), pages.currentPage, search, sort, sortOrder) }} 
+                    {{ macros.paginationLink(pages.getNumPages(), pages.currentPage, search, sort, sortOrder, displayItems) }} 
                 {% endif %}
             {% endif %}
             {% if pages.hasNextPage() %}
-                <a href="?page={{ pages.currentPage + 1}}{% if search %}&search={{ search }}{% endif %}{% if not(sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{% if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}">
+                <a href="?page={{ pages.currentPage + 1}}{% if search %}&search={{ search }}{% endif %}{% if not(sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{% if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}{% if displayItems and displayItems != 10 %}&displayItems={{ displayItems }}{% endif %}">
                     <span class="page">Next</span>
                 </a>
             {% endif %}
@@ -159,6 +171,12 @@
         var sortOrderValue = "{{ sortOrder }}";
     {% else %}
         var sortOrderValue = "desc";
+    {% endif %}
+
+    {% if displayItems %}
+        var displayItemsValue = "{{ displayItems }}";
+    {% else %}
+        var displayItemsValue = "10";
     {% endif %}
     </script>
 

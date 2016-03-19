@@ -83,6 +83,10 @@ pageSelectSmall.change(function() {
         pageURL += "&sort=" + sortValue + "&sortOrder=" + sortOrderValue;
     }
 
+    if(displayItemsValue != 10) {
+        pageURL += "&displayItems=" + displayItemsValue;
+    }
+
     window.location = pageURL;
 });
 

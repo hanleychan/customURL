@@ -6,7 +6,7 @@ class Website extends DatabaseObject {
     public $hits;
     public $added;
     const MAX_SHORTNAME_LENGTH = 50;
-
+    const UNALLOWED_NAMES = ["all", "admin", "addURL"];
     protected static $table_name = "websites";
     protected static $db_fields = array('id', 'url', 'shortname', 'hits', 'added');
     
@@ -34,7 +34,7 @@ class Website extends DatabaseObject {
      */  
     public static function isValidName($name) {
         // name only contain letters, numbers, underscores, dashes and be less than MAX_SHORTNAME_LENGTH characters
-        if(preg_match("/^[a-zA-Z0-9_-]+$/", $name) && $name != "all" && strlen($name) <= self::MAX_SHORTNAME_LENGTH) {
+        if(preg_match("/^[a-zA-Z0-9_-]+$/", $name) && !in_array($name, self::UNALLOWED_NAMES) && strlen($name) <= self::MAX_SHORTNAME_LENGTH) {
             return true;
         }
         else {
