@@ -104,10 +104,6 @@ $app->get('/all', function($request, $response, $args) use ($db) {
     return $this->view->render($response, 'all.twig', compact("allResults", "baseURL", "search", "sort", "sortOrder", "pages", "displayItems"));
 })->setName('all');
 
-$app->get('/admin', function($request, $response, $args) use ($db) {
-    return 'admin';
-})->setName('admin');
-
 
 // Redirect to the specified url
 $app->get('/{name}', function($request, $response, $args) use ($db) {
