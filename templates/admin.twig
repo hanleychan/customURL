@@ -1,0 +1,15 @@
+{% extends 'layout.twig' %}
+{% block content %}
+    <h2>Admin Login</h2>
+    <form action="{{ path_for("adminLogin") }}" method="post">
+        <fieldset>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username"><br>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password"><br>
+            
+            <input type="submit" id="submit" name="submit" value="Login">
+        </fieldset>
+    </form>
+{% endblock %}

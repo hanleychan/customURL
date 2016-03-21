@@ -55,6 +55,22 @@ $app->get('/', function($request , $response, $args) use ($db) {
     return $this->view->render($response, 'index.twig', compact("latestResults", "topResults", "baseURL", "postData"));
 })->setName('home');
 
+$app->get('/admin', function($request, $response, $args) use ($db) {
+    return $this->view->render($response, 'admin.twig');
+})->setName('admin');
+
+$app->post('/admin', function($request, $response, $args) use ($db) {
+    $username = trim($request->getParam("username"));
+    $password = trim($request->getParam("password"));
+
+    $result = Admin::authenticate($db, $username, $password);
+
+    if($result) {
+    }
+    else {
+    }
+
+})->setName("adminLogin");
 
 // Show all entries page
 $app->get('/all', function($request, $response, $args) use ($db) {
