@@ -83,6 +83,16 @@ $app->post('/admin', function($request, $response, $args) use ($db, $session) {
     }
 })->setName("adminLogin");
 
+$app->get('/logout', function($request, $response, $args) use ($session) {
+    if($session->isLoggedIn()) {
+        $session->logout();
+        return "LOGGED OUT";
+    }
+    else {
+        return "ERROR: NOT LOGGED IN";
+    }
+})->setName('logout');
+
 // Show all entries page
 $app->get('/all', function($request, $response, $args) use ($db) {
     $baseURL = "http://" . $_SERVER["HTTP_HOST"] . BASE_URL;
