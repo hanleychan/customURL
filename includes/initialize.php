@@ -8,5 +8,6 @@ require_once(ROOT_PATH . "includes/databaseObject.php");
 require_once(ROOT_PATH . "includes/website.php");
 require_once(ROOT_PATH . "includes/pagination.php");
 require_once(ROOT_PATH . "includes/admin.php");
+require_once(ROOT_PATH . "includes/session.php");
 
 ?>

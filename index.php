@@ -5,6 +5,7 @@ require_once('includes/initialize.php');
 require_once('vendor/autoload.php');
 
 $db = new MySQLDatabase();
+$session = new Session();
 $app = new \Slim\App();
 
 // Get container
@@ -55,21 +56,31 @@ $app->get('/', function($request , $response, $args) use ($db) {
     return $this->view->render($response, 'index.twig', compact("latestResults", "topResults", "baseURL", "postData"));
 })->setName('home');
 
-$app->get('/admin', function($request, $response, $args) use ($db) {
-    return $this->view->render($response, 'admin.twig');
+$app->get('/admin', function($request, $response, $args) use ($db, $session) {
+    if($session->isLoggedIn()) {
+        $router = $this->router;
+        return $response->withRedirect($router->pathFor('all'));
+    }
+    else {
+        return $this->view->render($response, 'admin.twig');
+    }
 })->setName('admin');
 
-$app->post('/admin', function($request, $response, $args) use ($db) {
+$app->post('/admin', function($request, $response, $args) use ($db, $session) {
     $username = trim($request->getParam("username"));
     $password = trim($request->getParam("password"));
 
-    $result = Admin::authenticate($db, $username, $password);
+    $admin = Admin::authenticate($db, $username, $password);
 
-    if($result) {
+    if($admin) {
+        // login user
+        $session->login($admin);
+        return "Login success";
     }
     else {
+        // authentication failed
+        return "Username/password incorrect";
     }
-
 })->setName("adminLogin");
 
 // Show all entries page
