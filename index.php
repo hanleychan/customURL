@@ -56,6 +56,8 @@ $app->get('/', function($request , $response, $args) use ($db) {
     return $this->view->render($response, 'index.twig', compact("latestResults", "topResults", "baseURL", "postData"));
 })->setName('home');
 
+
+// Admin login route and redirect
 $app->get('/admin', function($request, $response, $args) use ($db, $session) {
     if($session->isLoggedIn()) {
         $router = $this->router;
@@ -66,6 +68,8 @@ $app->get('/admin', function($request, $response, $args) use ($db, $session) {
     }
 })->setName('admin');
 
+
+// Process admin login form data
 $app->post('/admin', function($request, $response, $args) use ($db, $session) {
     $username = trim($request->getParam("username"));
     $password = trim($request->getParam("password"));
@@ -79,19 +83,30 @@ $app->post('/admin', function($request, $response, $args) use ($db, $session) {
     }
     else {
         // authentication failed
-        return "Username/password incorrect";
+        $this->flash->addMessage("fail", "Username/password incorrect");
+        $router = $this->router;
+        return $response->withRedirect($router->pathFor('error'));
     }
 })->setName("adminLogin");
 
+
+// Process logging out admin
 $app->get('/logout', function($request, $response, $args) use ($session) {
     if($session->isLoggedIn()) {
         $session->logout();
         return "LOGGED OUT";
     }
     else {
-        return "ERROR: NOT LOGGED IN";
+        $this->flash->addMessage("fail", "You are not logged in");
+        $router = $this->router;
+        return $response->withRedirect($router->pathFor('error'));
     }
 })->setName('logout');
+
+// Page error route
+$app->get('/error', function($request, $response, $args) use ($session) {
+    return $this->view->render($response, 'error.twig');
+})->setName('error');
 
 // Show all entries page
 $app->get('/all', function($request, $response, $args) use ($db) {
@@ -151,11 +166,12 @@ $app->get('/{name}', function($request, $response, $args) use ($db) {
         $website->hits += 1;
         $website->save();
 
-        header("Location: " . $website->url);
-        exit;
+        return $response->withRedirect($website->url);
     }
     else {
-        return $this->view->render($response, "invalid.twig", ["name"=>$name]);
+        $this->flash->addMessage("fail", "Custom name {$name} does not exist");
+        $router = $this->router;
+        return $response->withRedirect($router->pathFor('error'));
     }
 });
 

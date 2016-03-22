@@ -6,7 +6,7 @@ class Website extends DatabaseObject {
     public $hits;
     public $added;
     const MAX_SHORTNAME_LENGTH = 50;
-    const UNALLOWED_NAMES = ["all", "admin", "addURL", "logout"];
+    const UNALLOWED_NAMES = ["all", "admin", "addURL", "logout", "error"];
     protected static $table_name = "websites";
     protected static $db_fields = array('id', 'url', 'shortname', 'hits', 'added');
     
