@@ -18,6 +18,9 @@ header h1 {
 h2 {
   margin: 2%; }
 
+section {
+  margin: 2%; }
+
 p#link {
   margin-left: 2%; }
   p#link a {

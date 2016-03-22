@@ -40,10 +40,11 @@ $app->add(function ($request, $response, $next) {
 
 
 // Homepage
-$app->get('/', function($request , $response, $args) use ($db) {
+$app->get('/', function($request , $response, $args) use ($db, $session) {
     $latestResults = Website::getLatest($db);
     $topResults = Website::getTopHits($db);
     $baseURL = "http://" . $_SERVER["HTTP_HOST"] . BASE_URL; 
+    $isAdmin = $session->isLoggedIn() ? true : false;
 
     if(isset($_SESSION["postData"])) {
         $postData = $_SESSION["postData"];
@@ -53,17 +54,19 @@ $app->get('/', function($request , $response, $args) use ($db) {
         $postData = null;
     }
 
-    return $this->view->render($response, 'index.twig', compact("latestResults", "topResults", "baseURL", "postData"));
+    return $this->view->render($response, 'index.twig', compact("latestResults", "topResults", "baseURL", "postData", "isAdmin"));
 })->setName('home');
 
 
 // Admin login route and redirect
 $app->get('/admin', function($request, $response, $args) use ($db, $session) {
     if($session->isLoggedIn()) {
+        // redirect to home page if already logged in
         $router = $this->router;
-        return $response->withRedirect($router->pathFor('all'));
+        return $response->withRedirect($router->pathFor('home'));
     }
     else {
+        // render login page
         return $this->view->render($response, 'admin.twig');
     }
 })->setName('admin');
@@ -75,16 +78,16 @@ $app->post('/admin', function($request, $response, $args) use ($db, $session) {
     $password = trim($request->getParam("password"));
 
     $admin = Admin::authenticate($db, $username, $password);
+    $router = $this->router;
 
     if($admin) {
-        // login user
+        // login user and redirect to home page
         $session->login($admin);
-        return "Login success";
+        return $response->withRedirect($router->pathFor('home'));
     }
     else {
         // authentication failed
         $this->flash->addMessage("fail", "Username/password incorrect");
-        $router = $this->router;
         return $response->withRedirect($router->pathFor('error'));
     }
 })->setName("adminLogin");
@@ -92,24 +95,29 @@ $app->post('/admin', function($request, $response, $args) use ($db, $session) {
 
 // Process logging out admin
 $app->get('/logout', function($request, $response, $args) use ($session) {
+    $router = $this->router;
+
     if($session->isLoggedIn()) {
         $session->logout();
-        return "LOGGED OUT";
+
+        // redirect to homepage
+        return $response->withRedirect($router->pathFor('home'));
     }
     else {
         $this->flash->addMessage("fail", "You are not logged in");
-        $router = $this->router;
         return $response->withRedirect($router->pathFor('error'));
     }
 })->setName('logout');
 
 // Page error route
-$app->get('/error', function($request, $response, $args) use ($session) {
+$app->get('/error', function($request, $response, $args) {
     return $this->view->render($response, 'error.twig');
 })->setName('error');
 
 // Show all entries page
-$app->get('/all', function($request, $response, $args) use ($db) {
+$app->get('/all', function($request, $response, $args) use ($db, $session) {
+    $isAdmin = $session->isLoggedIn() ? true : false;
+
     $baseURL = "http://" . $_SERVER["HTTP_HOST"] . BASE_URL;
 
     $search = trim($request->getParam("search"));
@@ -153,7 +161,7 @@ $app->get('/all', function($request, $response, $args) use ($db) {
         $allResults = Website::getAllSorted($db, $limit, $offset);
     }
 
-    return $this->view->render($response, 'all.twig', compact("allResults", "baseURL", "search", "sort", "sortOrder", "pages", "displayItems"));
+    return $this->view->render($response, 'all.twig', compact("allResults", "baseURL", "search", "sort", "sortOrder", "pages", "displayItems", "isAdmin"));
 })->setName('all');
 
 

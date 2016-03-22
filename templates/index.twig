@@ -2,7 +2,14 @@
 
 {% extends 'layout.twig' %}
 {% block content %}
-    <section id="addWebsite">
+    <p id="link">
+        <a href="{{ path_for('all') }}">View all entries</a>
+        {% if isAdmin %}
+            <a href="{{ path_for('logout') }}">Logout</a>
+        {% endif %}
+    </p>
+
+     <section id="addWebsite">
         <form id="addWebsite" action="{{ path_for('addURL') }}" method="post">
             <fieldset>
                 <legend>Add a Website: </legend>
@@ -21,10 +28,7 @@
             </fieldset>
         </form>
 
-        <p id="link">
-            <a href="{{ path_for('all') }}">View all entries</a>
-        </p>
-    </section>
+   </section>
 
     <section id="results">
         <table class="smallTable" id="latestTenSmall">

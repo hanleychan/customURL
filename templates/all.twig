@@ -4,7 +4,12 @@
 {% block content %}
 <h2>All Entries</h2>
 
-<p id="link"><a href="{{ path_for('home') }}">Return to homepage</a></p>
+<p id="link">
+    <a href="{{ path_for('home') }}">Return to homepage</a>
+    {% if isAdmin %}
+        <a href="{{ path_for('logout') }}">Logout</a>
+    {% endif %}
+</p>
 
 <section id="filterResults">
     <form id="filterResultsForm" action"#" method="get">
