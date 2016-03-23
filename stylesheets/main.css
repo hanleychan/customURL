@@ -107,27 +107,27 @@ footer {
 /**
  * Home page styles
  */
-form#addWebsite, form#filterResultsForm {
+form#addWebsite, form#filterResultsForm, form#loginForm {
   width: 96%;
   margin: 0 auto; }
-  form#addWebsite label, form#filterResultsForm label {
+  form#addWebsite label, form#filterResultsForm label, form#loginForm label {
     display: inline-block;
     width: 150px;
     margin: 5px 0; }
-  form#addWebsite input[type="text"], form#filterResultsForm input[type="text"] {
+  form#addWebsite input[type="text"], form#filterResultsForm input[type="text"], form#loginForm input[type="text"] {
     display: block;
     width: 90%; }
-  form#addWebsite input[type="submit"], form#filterResultsForm input[type="submit"] {
+  form#addWebsite input[type="submit"], form#filterResultsForm input[type="submit"], form#loginForm input[type="submit"] {
     margin-top: 10px; }
-  form#addWebsite fieldset, form#filterResultsForm fieldset {
+  form#addWebsite fieldset, form#filterResultsForm fieldset, form#loginForm fieldset {
     border: solid 2px black; }
 
 /**
  * All results page styles
  */
-form#filterResultsForm label {
+form#filterResultsForm label, form#loginForm label {
   width: 90px; }
-form#filterResultsForm input[type="text"] {
+form#filterResultsForm input[type="text"], form#loginForm input[type="text"] {
   display: initial;
   width: initial; }
 
@@ -159,3 +159,7 @@ div#paginationSmall {
     text-decoration: none; }
   div#paginationSmall img {
     vertical-align: middle; }
+
+/**
+ * Admin login page styles
+ */

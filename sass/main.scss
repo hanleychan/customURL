@@ -251,3 +251,10 @@ div#paginationSmall {
     display: block;
     text-align: center;
 }
+
+/**
+ * Admin login page styles
+ */
+form#loginForm {
+    @extend #filterResultsForm;
+}

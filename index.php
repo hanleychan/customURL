@@ -59,7 +59,7 @@ $app->get('/', function($request , $response, $args) use ($db, $session) {
 
 
 // Admin login route and redirect
-$app->get('/admin', function($request, $response, $args) use ($db, $session) {
+$app->get('/admin', function($request, $response, $args) use ($session) {
     if($session->isLoggedIn()) {
         // redirect to home page if already logged in
         $router = $this->router;
