@@ -136,7 +136,26 @@ $app->get('/delete/{id}', function ($request, $response, $args) use ($db, $sessi
 
 // Process delete entry form
 $app->post('/processDelete', function ($request, $response, $args) use ($db, $session) {
-    echo $this->request->getParam("id");
+    $router = $this->router;
+
+    if($session->isLoggedIn()) {
+        $id = (int)$this->request->getParam("id");
+        $website = Website::findById($db, $id);
+
+        if($website) {
+            $website->delete();
+            $this->flash->addMessage("success", "Website entry has been deleted");
+            return $response->withRedirect($router->pathFor('home'));
+        }
+        else {
+            $this->flash->addMessage("fail", "Delete website entry failed");
+            return $response->withRedirect($router->pathFor('error'));
+        }
+    }
+    else {
+        $this->flash->addMessage("fail", "You do not have permission to view this page");
+        return $response->withRedirect($router->pathFor('error'));
+    }
 })->setName('processDelete');
 
 // Page error route
