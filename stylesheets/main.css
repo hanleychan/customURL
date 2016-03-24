@@ -117,6 +117,8 @@ table.bigTable {
     width: 40%; }
   table.bigTable .hits {
     width: 10%; }
+  table.bigTable .admin {
+    width: 15%; }
   table.bigTable .noData {
     padding: 10px; }
 

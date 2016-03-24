@@ -154,12 +154,15 @@
             <th class="customURL">Custom URL</th>
             <th class="hits">Hits</th>
             <th class="added">Added</th>
+            {% if isAdmin %}
+            <th class="admin">Admin</th>
+            {% endif %}
         </tr>
         {% if not allResults %}
             <tr><td colspan="5" class="noData">No Data</td></tr>
         {% else %}
             {% for result in allResults %}
-                {{ macros.tableBigRow(loop.index + pages.calculateOffset(), result.url, baseURL ~ result.shortname, result.hits, result.added|slice(0,10)) }} 
+                {{ macros.tableBigRow(loop.index + pages.calculateOffset(), result.url, baseURL ~ result.shortname, result.hits, result.added|slice(0,10), isAdmin, result.id) }} 
             {% endfor %}
         {% endif %}
     </table>

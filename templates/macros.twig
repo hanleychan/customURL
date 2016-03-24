@@ -5,13 +5,16 @@
     </tr>
 {% endmacro %}
 
-{% macro tableBigRow(rank, url, customURL, hits, added) %}
+{% macro tableBigRow(rank, url, customURL, hits, added, isAdmin, id) %}
     <tr>
         <td class="rank">{{ rank }}</td>
         <td class="fullURL"><a href="{{ url }}" title="{{ url }}">{{ url }}</a></td>
         <td class="customURL"><a href="{{ customURL}}" title="{{ customURL }}">{{ customURL }}</a></td>
         <td class="hits">{{ hits }}</td>
         <td class="added">{{ added }}</td>
+        {% if isAdmin == true and id  %}
+        <td class="admin"><a href="{{ path_for('deleteEntry', {'id' : id}) }}">Delete</a></td>
+        {% endif %}
     </tr>
 {% endmacro %}
 

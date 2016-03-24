@@ -1,0 +1,17 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<h2>Confirm Delete: </h2>
+
+<form id="deleteEntryForm" action="{{ path_for('processDelete') }}" method="post">
+<ul id="deleteEntryList">
+    <li><span>ID:</span> {{ website.id }}</li>
+    <li><span>URL:</span> {{ website.url }}</li>
+    <li><span>Custom Name:</span> {{ website.shortname }}</li>
+    <li><span>Hits:</span> {{ website.hits }}</li>
+    <li><span>Added:</span> {{ website.added|slice(0,10) }}</li>
+</ul>
+<input type="hidden" id="id" name="id" value="{{ website.id }}">
+<input type="submit" value="Delete">
+</form>
+{% endblock %}

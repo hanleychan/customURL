@@ -104,7 +104,6 @@ $app->get('/logout', function($request, $response, $args) use ($session) {
 
         // redirect to homepage
         $this->flash->addMessage("adminLoginSuccess", "You have successfully logged out");
-        $this->flash->addMessage("adminLoginFail", "You have successfully logged out");
         return $response->withRedirect($router->pathFor('home'));
     }
     else {
@@ -112,6 +111,33 @@ $app->get('/logout', function($request, $response, $args) use ($session) {
         return $response->withRedirect($router->pathFor('error'));
     }
 })->setName('logout');
+
+
+// Delete an entry
+$app->get('/delete/{id}', function ($request, $response, $args) use ($db, $session) {
+    $id = (int)$args["id"];
+
+    if($session->isLoggedIn()) {
+        $website = Website::findById($db, $id);
+        if($website) {
+            return $this->view->render($response, "delete.twig", compact("website"));
+        }
+        else {
+            $router = $this->router;
+            return $response->withRedirect($router->pathFor('error'));
+        }
+    }
+    else {
+        $router = $this->router;
+        $this->flash->addMessage("fail", "You do not have permission to view this page");
+        return $response->withRedirect($router->pathFor('error'));
+    }
+})->setName('deleteEntry');
+
+// Process delete entry form
+$app->post('/processDelete', function ($request, $response, $args) use ($db, $session) {
+    echo $this->request->getParam("id");
+})->setName('processDelete');
 
 // Page error route
 $app->get('/error', function($request, $response, $args) {

@@ -83,12 +83,15 @@
             <th class="customURL">Custom URL</th>
             <th class="hits">Hits</th>
             <th class="added">Added</th>
+            {% if isAdmin %}
+            <th class="admin">Admin</th>
+            {% endif %}
         </tr>
         {% if not latestResults %}
             <tr><td colspan="5" class="noData">No Data</td></tr>
         {% else %}
             {% for latestResult in latestResults %}
-                {{ tables.tableBigRow(loop.index, latestResult.url, baseURL ~ latestResult.shortname, latestResult.hits, latestResult.added|slice(0,10)) }} 
+                {{ tables.tableBigRow(loop.index, latestResult.url, baseURL ~ latestResult.shortname, latestResult.hits, latestResult.added|slice(0,10), isAdmin, latestResult.id) }} 
             {% endfor %}
         {% endif %}
     </table>
@@ -101,12 +104,15 @@
             <th class="customURL">Custom URL</th>
             <th class="hits">Hits</th>
             <th class="added">Added</th>
+            {% if isAdmin %}
+            <th class="admin">Admin</th>
+            {% endif %}
         </tr>
         {% if not topResults %}
             <tr><td colspan="5" class="noData">No Data</td></tr>
         {% else %}
             {% for topResult in topResults %}
-                {{ tables.tableBigRow(loop.index, topResult.url, baseURL ~ topResult.shortname, topResult.hits, topResult.added|slice(0,10)) }}
+                {{ tables.tableBigRow(loop.index, topResult.url, baseURL ~ topResult.shortname, topResult.hits, topResult.added|slice(0,10), isAdmin, topResult.id) }}
             {% endfor %}
         {% endif %}
     </table>
