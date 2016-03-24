@@ -1,16 +1,32 @@
 {% extends 'layout.twig' %}
 {% block content %}
-    <h2>Admin Login</h2>
-    <form action="{{ path_for("adminLogin") }}" method="post" id="loginForm">
-        <fieldset>
-            <legend>Enter Login Details</legend>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username"><br>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password"><br>
-            
-            <input type="submit" id="submit" name="submit" value="Login">
-        </fieldset>
-    </form>
+<h2>Admin Login</h2>
+
+ <section id="adminMessages">
+</section>
+<form action="{{ path_for("adminLogin") }}" method="post" id="loginForm">
+    <fieldset>
+        {% for message in flash.message("adminLoginSuccess") %}
+            <p class="success">{{ message }}</p>
+        {% endfor %}
+        {% for message in flash.message("adminLoginFail") %}
+            <p class="fail">{{ message }}</p>
+        {% endfor %}
+
+        <legend>Enter Login Details</legend>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br>
+        
+        <input type="submit" id="submit" name="submit" value="Login">
+    </fieldset>
+</form>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="js/index.js"></script>
 {% endblock %}

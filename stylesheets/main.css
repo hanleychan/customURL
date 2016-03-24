@@ -35,11 +35,30 @@ p#link {
   p#link a:hover {
     background-color: #ffd24d; }
 
-p.success {
+p.success, p.adminLoginSuccess, p.adminLoginFail {
   color: #009900; }
 
 p.fail {
   color: #ff3333; }
+
+p.adminLoginSuccess, p.adminLoginFail {
+  border: solid 2px #009900;
+  padding: 5px 20px;
+  border-radius: 15px;
+  display: inline-block;
+  float: left;
+  margin: 0 0 15px; }
+
+p.adminLoginFail {
+  color: #ff3333;
+  border-color: #ff3333;
+  clear: left; }
+
+button.closeButton {
+  margin-left: 15px; }
+
+form {
+  clear: both; }
 
 table.smallTable, table.bigTable {
   width: 95%;

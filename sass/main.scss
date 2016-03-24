@@ -72,6 +72,30 @@ p.fail {
     color: $failColor;
 }
 
+p.adminLoginSuccess {
+    @extend .success;
+    border: solid 2px $successColor;
+    padding: 5px 20px;
+    border-radius: 15px;
+    display: inline-block;
+    float: left;
+    margin: 0 0 15px;
+}
+
+p.adminLoginFail {
+    @extend .adminLoginSuccess;
+    color: $failColor;
+    border-color: $failColor; 
+    clear: left;
+}
+
+button.closeButton {
+    margin-left: 15px;
+}
+
+form {
+    clear: both;
+}
 
 table.smallTable {
     caption {
@@ -258,3 +282,4 @@ div#paginationSmall {
 form#loginForm {
     @extend #filterResultsForm;
 }
+

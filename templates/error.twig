@@ -3,8 +3,11 @@
 {% block content %}
 <h2>Error</h2>
 <section id="errorSection">
-    {% if flash.messages['fail'] %}
+    {% if flash.messages['fail'] or flash.messages['adminLoginFail'] %}
         {% for message in flash.messages['fail'] %} 
+            <p class="fail">{{ message }}</p>
+        {% endfor %}
+        {% for message in flash.messages['adminLoginFail'] %}
             <p class="fail">{{ message }}</p>
         {% endfor %}
     {% else %}
