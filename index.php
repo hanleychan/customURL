@@ -45,6 +45,7 @@ $app->get('/', function($request , $response, $args) use ($db, $session) {
     $topResults = Website::getTopHits($db);
     $baseURL = "http://" . $_SERVER["HTTP_HOST"] . BASE_URL; 
     $isAdmin = $session->isLoggedIn() ? true : false;
+    $session->updatePage($this->router->pathFor('home'));
 
     if(isset($_SESSION["postData"])) {
         $postData = $_SESSION["postData"];
@@ -209,6 +210,33 @@ $app->get('/all', function($request, $response, $args) use ($db, $session) {
     else {
         $allResults = Website::getAllSorted($db, $limit, $offset);
     }
+
+    $sessionPage = $this->router->pathFor('all');
+    // update here
+    if($search || $sort || $sortOrder || $page || $displayItems) {
+        $sessionPage .= "?";
+        $getVariablesJoiner = "";
+        if($page) {
+            $sessionPage .= "page={$page}";
+            $getVariablesJoiner = "&";
+        }
+        if ($search) {
+            $sessionPage .= "{$getVariablesJoiner}search={$search}";
+            $getVariablesJoiner = "&";
+        }
+        if($sort) {
+            $sessionPage .= "{$getVariablesJoiner}sort={$sort}";
+            $getVariablesJoiner = "&";
+        }
+        if($sortOrder) {
+            $sessionPage .= "{$getVariablesJoiner}sortOrder={$sortOrder}";
+            $getVariablesJoiner = "&";
+        }
+        if($displayItems) {
+            $sessionPage .= "{$getVariablesJoiner}displayItems={$displayItems}";
+        }
+    }
+    $session->updatePage($sessionPage);
 
     return $this->view->render($response, 'all.twig', compact("allResults", "baseURL", "search", "sort", "sortOrder", "pages", "displayItems", "isAdmin"));
 })->setName('all');

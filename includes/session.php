@@ -1,11 +1,22 @@
 <?php
+require_once("initialize.php");
+
 class Session {
     private $loggedIn = false;
+    private $previousPage;
     public $adminID;
+
 
     public function __construct() {
         if(session_status() == PHP_SESSION_NONE) {
             session_start();
+        }
+
+        if(!isset($_SESSION["url"]["prevPage"])) {
+            $this->previousPage = BASE_URL;
+        }
+        else {
+            $this->previousPage = $_SESSION["url"]["prevPage"];
         }
 
         $this->checkLogin();
@@ -38,6 +49,15 @@ class Session {
             unset($this->adminID);
         }
     }
+
+    public function updatePage($page='home') {
+        $this->previousPage = $_SESSION["url"]["prevPage"] = $page;
+    }
+
+    public function getPrevPage() {
+        return $this->previousPage;
+    }
 }
 
 ?>
+
