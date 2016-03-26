@@ -2,14 +2,16 @@
 {% block content %}
 <section id="adminLoginSection">
     <h2>Admin Login</h2>
+
+    {% for message in flash.message("dismissableSuccess") %}
+        <p class="dismissableSuccess">{{ message }} <button class="closeButton">x</button></p>
+    {% endfor %}
+    {% for message in flash.message("dismissableFail") %}
+        <p class="dismissableFail">{{ message }} <button class="closeButton">x</button></p>
+    {% endfor %}
+
     <form action="{{ path_for("adminLogin") }}" method="post" id="loginForm">
         <fieldset>
-            {% for message in flash.message("adminLoginSuccess") %}
-                <p class="success">{{ message }}</p>
-            {% endfor %}
-            {% for message in flash.message("adminLoginFail") %}
-                <p class="fail">{{ message }}</p>
-            {% endfor %}
 
             <legend>Enter Login Details</legend>
             <label for="username">Username:</label>
