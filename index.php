@@ -140,15 +140,23 @@ $app->post('/processDelete', function ($request, $response, $args) use ($db, $se
         $id = (int)$this->request->getParam("id");
         $website = Website::findById($db, $id);
 
-        if($website) {
-            $website->delete();
-            $this->flash->addMessage("dismissableSuccess", "Website entry has been deleted");
+        // redirect back to previous page if cancel button is clicked
+        if($this->request->getParam("cancelButton")) {
             return $response->withRedirect($session->getPrevPage());
         }
-        else {
-            $this->flash->addMessage("dismissableFail", "Delete website entry failed");
-            $router = $this->router;
-            return $response->withRedirect($router->pathFor('error'));
+
+        // delete entry if delete button is clicked
+        if($this->request->getParam("deleteButton")) {
+            if($website) {
+                $website->delete();
+                $this->flash->addMessage("dismissableSuccess", "Website entry has been deleted");
+                return $response->withRedirect($session->getPrevPage());
+            }
+            else {
+                $this->flash->addMessage("dismissableFail", "Delete website entry failed");
+                $router = $this->router;
+                return $response->withRedirect($router->pathFor('error'));
+            }
         }
     }
     else {

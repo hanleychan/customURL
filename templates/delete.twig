@@ -3,15 +3,32 @@
 {% block content %}
 <h2>Confirm Delete: </h2>
 
+<table id="deleteEntryTable">
+    <tr>
+        <th>ID:</th>
+        <td>{{ website.id }}</td>
+    </tr>
+    <tr>
+        <th>URL:</th>
+        <td>{{ website.url }}</td>
+    </tr>
+    <tr>
+        <th>Custom Name:</th>
+        <td>{{ website.shortname }}</td>
+    </tr>
+    <tr>
+        <th>Hits:</th>
+        <td>{{ website.hits }}</td>
+    </tr>
+    <tr>
+        <th>Added:</th>
+        <td>{{ website.added|slice(0,10) }}</td>
+    </tr>
+</table>
+
 <form id="deleteEntryForm" action="{{ path_for('processDelete') }}" method="post">
-<ul id="deleteEntryList">
-    <li><span>ID:</span> {{ website.id }}</li>
-    <li><span>URL:</span> {{ website.url }}</li>
-    <li><span>Custom Name:</span> {{ website.shortname }}</li>
-    <li><span>Hits:</span> {{ website.hits }}</li>
-    <li><span>Added:</span> {{ website.added|slice(0,10) }}</li>
-</ul>
-<input type="hidden" id="id" name="id" value="{{ website.id }}">
-<input type="submit" value="Delete" id="deleteButton">
+    <input type="hidden" id="id" name="id" value="{{ website.id }}">
+    <input type="submit" value="Cancel" id="cancelButton" name="cancelButton">
+    <input type="submit" value="Delete" id="deleteButton" name="deleteButton">
 </form>
 {% endblock %}
