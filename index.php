@@ -62,9 +62,8 @@ $app->get('/', function($request , $response, $args) use ($db, $session) {
 // Admin login route and redirect
 $app->get('/admin', function($request, $response, $args) use ($session) {
     if($session->isLoggedIn()) {
-        // redirect to home page if already logged in
+        // redirect to previous page if already logged in
         $this->flash->addMessage("dismissableFail", "You are already logged in");
-        
         return $response->withRedirect($session->getPrevPage());
     }
     else {
@@ -83,10 +82,10 @@ $app->post('/admin', function($request, $response, $args) use ($db, $session) {
     $router = $this->router;
 
     if($admin) {
-        // login user and redirect to home page
+        // login user and redirect to previous page
         $session->login($admin);
         $this->flash->addMessage("dismissableSuccess", "You have successfully logged in");
-        return $response->withRedirect($router->pathFor('home'));
+        return $response->withRedirect($session->getPrevPage());
     }
     else {
         // authentication failed
