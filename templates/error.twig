@@ -1,8 +1,8 @@
 {% extends 'layout.twig' %}
 
 {% block content %}
-<h2>Error</h2>
 <section id="errorSection">
+<h2>Error</h2>
     {% if flash.messages['fail'] or flash.messages['adminLoginFail'] %}
         {% for message in flash.messages['fail'] %} 
             <p class="fail">{{ message }}</p>

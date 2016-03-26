@@ -1,29 +1,27 @@
 {% extends 'layout.twig' %}
 {% block content %}
+<section id="adminLoginSection">
+    <h2>Admin Login</h2>
+    <form action="{{ path_for("adminLogin") }}" method="post" id="loginForm">
+        <fieldset>
+            {% for message in flash.message("adminLoginSuccess") %}
+                <p class="success">{{ message }}</p>
+            {% endfor %}
+            {% for message in flash.message("adminLoginFail") %}
+                <p class="fail">{{ message }}</p>
+            {% endfor %}
 
-<h2>Admin Login</h2>
+            <legend>Enter Login Details</legend>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username"><br>
 
- <section id="adminMessages">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password"><br>
+            
+            <input type="submit" id="submit" name="submit" value="Login">
+        </fieldset>
+    </form>
 </section>
-<form action="{{ path_for("adminLogin") }}" method="post" id="loginForm">
-    <fieldset>
-        {% for message in flash.message("adminLoginSuccess") %}
-            <p class="success">{{ message }}</p>
-        {% endfor %}
-        {% for message in flash.message("adminLoginFail") %}
-            <p class="fail">{{ message }}</p>
-        {% endfor %}
-
-        <legend>Enter Login Details</legend>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"><br>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br>
-        
-        <input type="submit" id="submit" name="submit" value="Login">
-    </fieldset>
-</form>
 {% endblock %}
 
 {% block scripts %}

@@ -2,26 +2,24 @@
 
 {% extends 'layout.twig' %}
 {% block content %}
-<h2>Add Website</h2>
-<p id="link">
-    <a href="{{ path_for('all') }}">All entries</a>
-    {% if isAdmin %}
-        <a href="{{ path_for('logout') }}">Logout</a>
-    {% else %}
-        <a href="{{ path_for('admin') }}">Admin Login</a>
-    {% endif %}
-</p>
+<section id="addWebsiteSection">
+    <h2>Add Website</h2>
+    <p id="link">
+        <a href="{{ path_for('all') }}">All entries</a>
+        {% if isAdmin %}
+            <a href="{{ path_for('logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ path_for('admin') }}">Admin Login</a>
+        {% endif %}
+    </p>
 
-<section id="adminMessages">
     {% for message in flash.message("dismissableSuccess") %}
         <p class="dismissableSuccess">{{ message }} <button class="closeButton">x</button></p>
     {% endfor %}
     {% for message in flash.message("dismissableFail") %}
         <p class="dismissableFail">{{ message }} <button class="closeButton">x</button></p>
     {% endfor %}
-</section>
 
- <section id="addWebsite">
      <form id="addWebsite" action="{{ path_for('addURL') }}" method="post">
         <fieldset>
             <legend>Add a Website: </legend>
@@ -39,10 +37,10 @@
             <input type="submit" value="Add Website">
         </fieldset>
     </form>
-
 </section>
 
-<section id="results">
+<section id="resultsSection">
+    <h3 id="results">Results Summary</h3>
     <table class="smallTable" id="latestTenSmall">
         <caption>Latest Results</caption>
         {% if not latestResults %}
@@ -94,7 +92,7 @@
             {% endif %}
         </tr>
         {% if not latestResults %}
-            <tr><td colspan="5" class="noData">No Data</td></tr>
+            <tr><td colspan="6" class="noData">No Data</td></tr>
         {% else %}
             {% for latestResult in latestResults %}
                 {{ tables.tableBigRow(loop.index, latestResult.url, baseURL ~ latestResult.shortname, latestResult.hits, latestResult.added|slice(0,10), isAdmin, latestResult.id) }} 
@@ -115,7 +113,7 @@
             {% endif %}
         </tr>
         {% if not topResults %}
-            <tr><td colspan="5" class="noData">No Data</td></tr>
+            <tr><td colspan="6" class="noData">No Data</td></tr>
         {% else %}
             {% for topResult in topResults %}
                 {{ tables.tableBigRow(loop.index, topResult.url, baseURL ~ topResult.shortname, topResult.hits, topResult.added|slice(0,10), isAdmin, topResult.id) }}

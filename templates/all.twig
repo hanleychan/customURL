@@ -2,28 +2,26 @@
 
 {% extends 'layout.twig' %}
 {% block content %}
-<h2>All Entries</h2>
+<section id="filterResultsSection">
+    <h2>All Entries</h2>
 
-<p id="link">
-    <a href="{{ path_for('home') }}">Add Website</a>
-    {% if isAdmin %}
-        <a href="{{ path_for('logout') }}">Logout</a>
-    {% else %}
-        <a href="{{ path_for('admin') }}">Admin Login</a>
-    {% endif %}
-</p>
+    <p id="link">
+        <a href="{{ path_for('home') }}">Add Website</a>
+        {% if isAdmin %}
+            <a href="{{ path_for('logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ path_for('admin') }}">Admin Login</a>
+        {% endif %}
+    </p>
 
-<section id="adminMessages">
     {% for message in flash.message("dismissableSuccess") %}
         <p class="dismissableSuccess">{{ message }} <button class="closeButton">x</button></p>
     {% endfor %}
     {% for message in flash.message("dismissableFail") %}
         <p class="dismissableFail">{{ message }} <button class="closeButton">x</button></p>
     {% endfor %}
-</section>
- 
-<section id="filterResults">
-    <form id="filterResultsForm" action"#" method="get">
+
+    <form id="filterResultsForm" action="#" method="get">
         <fieldset>
             <legend>Filters: </legend>
             <label for="search">Search: </label>
@@ -53,7 +51,7 @@
     </form>
 </section>
 
-<section id="pageSelect">
+<section id="resultsSection">
     <div id="paginationSmall">
         {% if pages.numItems >= 1 %}
             <p>
@@ -127,11 +125,9 @@
         </p>
     </div>
 
-</section>
+    <h3 id="results">Results</h3>
 
-<section id="results">
     <table id="addResultsSmall" class="smallTable">
-        <caption>Results</caption>
         {% if not allResults %}
             <tr><td class="noData">No Data</td></tr>
         {% else %}
@@ -150,7 +146,6 @@
     </table>
 
     <table id="allResultsBig" class="bigTable">
-        <caption>Results</caption>
         <tr>
             <th class="rank">#</th>
             <th class="fullURL">Full URL</th>
@@ -162,7 +157,7 @@
             {% endif %}
         </tr>
         {% if not allResults %}
-            <tr><td colspan="5" class="noData">No Data</td></tr>
+            <tr><td colspan="6" class="noData">No Data</td></tr>
         {% else %}
             {% for result in allResults %}
                 {{ macros.tableBigRow(loop.index + pages.calculateOffset(), result.url, baseURL ~ result.shortname, result.hits, result.added|slice(0,10), isAdmin, result.id) }} 

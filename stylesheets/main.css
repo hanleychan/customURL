@@ -18,6 +18,9 @@ header h1 {
 h2 {
   margin: 2%; }
 
+h3#results {
+  text-align: center; }
+
 section {
   margin: 2%; }
 
