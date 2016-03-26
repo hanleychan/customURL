@@ -1,7 +1,7 @@
-{% macro tableSmallRow(heading, class, value, valueIsLink) %}
+{% macro tableSmallRow(heading, class, value, link) %}
     <tr>
         <th>{{ heading }}</th>
-        <td class="{{ class }}">{% if valueIsLink == true %}<a href="{{ value }}" title="{{ value }}">{% endif %}{{ value }}{% if valueIsLink == true %}</a>{% endif %}</td>
+        <td class="{{ class }}">{% if link %}<a href="{{ link }}" title="{{ value }}">{% endif %}{{ value }}{% if link %}</a>{% endif %}</td>
     </tr>
 {% endmacro %}
 

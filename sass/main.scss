@@ -64,6 +64,11 @@ p#link {
     margin-left: 2%;
 }
 
+a#returnHome {
+    text-decoration: none;
+    color: $linkColor;
+}
+
 p.success {
     color: $successColor;
 }
@@ -72,7 +77,7 @@ p.fail {
     color: $failColor;
 }
 
-p.adminLoginSuccess {
+p.dismissableSuccess {
     @extend .success;
     border: solid 2px $successColor;
     padding: 5px 20px;
@@ -82,8 +87,8 @@ p.adminLoginSuccess {
     margin: 0 0 15px;
 }
 
-p.adminLoginFail {
-    @extend .adminLoginSuccess;
+p.dismissableFail {
+    @extend .dismissableSuccess;
     color: $failColor;
     border-color: $failColor; 
     clear: left;
@@ -284,5 +289,26 @@ div#paginationSmall {
  */
 form#loginForm {
     @extend #filterResultsForm;
+}
+
+/**
+ * Delete Entry page styles
+ */
+form#deleteEntryForm {
+    ul#deleteEntryList {
+        li {
+            span {
+                display: inline-block;
+                width: 120px;
+                font-weight: bold;
+            }
+
+            list-style: none;
+        }
+    }
+
+    input#deleteButton {
+        margin-left: 2%;
+    }
 }
 

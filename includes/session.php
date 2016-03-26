@@ -6,7 +6,9 @@ class Session {
     private $previousPage;
     public $adminID;
 
-
+    /**
+     * Sets up session and loads previousPage
+     */
     public function __construct() {
         if(session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -22,6 +24,9 @@ class Session {
         $this->checkLogin();
     }
 
+    /**
+     * Login an admin by setting session variable
+     */
     public function login($admin) {
         if($admin) {
             $this->adminID = $_SESSION["url"]["adminID"] = $admin->id;
@@ -29,16 +34,25 @@ class Session {
         }
     }
 
+    /**
+     * Logs out an admin by unsetting session variable
+     */
     public function logout() {
         $this->loggedIn = false;
         unset($this->adminID);
         unset($_SESSION["url"]["adminID"]);
     }
 
+    /**
+     * Returns whether an admin is logged in
+     */
     public function isLoggedIn() {
         return $this->loggedIn;
     }
 
+    /**
+     * Set up login data variables
+     */
     private function checkLogin() {
         if(isset($_SESSION["url"]["adminID"])) {
             $this->loggedIn = true;
@@ -50,10 +64,16 @@ class Session {
         }
     }
 
+    /**
+     * Updates the previous page
+     */
     public function updatePage($page='home') {
         $this->previousPage = $_SESSION["url"]["prevPage"] = $page;
     }
 
+    /**
+     * Fetch the previous page
+     */
     public function getPrevPage() {
         return $this->previousPage;
     }

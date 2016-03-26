@@ -4,6 +4,9 @@ class Pagination {
     public $numItemsPerPage;
     public $currentPage;
 
+    /**
+     * Sets up pagination data
+     */
     public function __construct($numItems = 0, $numItemsPerPage = 10, $currentPage = 1) {
         $this->numItems = $numItems;
         $this->numItemsPerPage = $numItemsPerPage;

@@ -14,11 +14,11 @@
 </p>
 
 <section id="adminMessages">
-    {% for message in flash.message("adminLoginSuccess") %}
-        <p class="adminLoginSuccess">{{ message }} <button class="closeButton">x</button></p>
+    {% for message in flash.message("dismissableSuccess") %}
+        <p class="dismissableSuccess">{{ message }} <button class="closeButton">x</button></p>
     {% endfor %}
-    {% for message in flash.message("adminLoginFail") %}
-        <p class="adminLoginFail">{{ message }} <button class="closeButton">x</button></p>
+    {% for message in flash.message("dismissableFail") %}
+        <p class="dismissableFail">{{ message }} <button class="closeButton">x</button></p>
     {% endfor %}
 </section>
  
@@ -137,10 +137,13 @@
         {% else %}
             {% for result in allResults %}
                 {{ macros.tableSmallRow('#', 'rank', loop.index + pages.calculateOffset()) }}
-                {{ macros.tableSmallRow('Full URL', 'fullURL', result.url, true) }}
-                {{ macros.tableSmallRow('Custom URL', 'customURL', baseURL ~ result.shortname, true) }}
+                {{ macros.tableSmallRow('Full URL', 'fullURL', result.url, result.url) }}
+                {{ macros.tableSmallRow('Custom URL', 'customURL', baseURL ~ result.shortname, baseURL ~ result.shortname) }}
                 {{ macros.tableSmallRow('Hits', 'hits', result.hits) }}
                 {{ macros.tableSmallRow('Added', 'added', result.added|slice(0,10)) }}
+                {% if isAdmin %}
+                    {{ macros.tableSmallRow('Delete', 'admin', 'Delete', path_for('deleteEntry', {'id' : result.id})) }} 
+                {% endif %}
                 <tr class="blankRow"><td colspan="2"></td></tr>
             {% endfor %}
         {% endif %}
@@ -200,5 +203,6 @@
     </script>
 
     <script src="js/all.js"></script>
+    <script src="js/dismissMessages.js"></script>
 {% endblock %}
 

@@ -63,9 +63,9 @@ $app->get('/', function($request , $response, $args) use ($db, $session) {
 $app->get('/admin', function($request, $response, $args) use ($session) {
     if($session->isLoggedIn()) {
         // redirect to home page if already logged in
-        $this->flash->addMessage("adminLoginFail", "You are already logged in");
-        $router = $this->router;
-        return $response->withRedirect($router->pathFor('home'));
+        $this->flash->addMessage("dismissableFail", "You are already logged in");
+        
+        return $response->withRedirect($session->getPrevPage());
     }
     else {
         // render login page
@@ -85,12 +85,12 @@ $app->post('/admin', function($request, $response, $args) use ($db, $session) {
     if($admin) {
         // login user and redirect to home page
         $session->login($admin);
-        $this->flash->addMessage("adminLoginSuccess", "You have successfully logged in");
+        $this->flash->addMessage("dismissableSuccess", "You have successfully logged in");
         return $response->withRedirect($router->pathFor('home'));
     }
     else {
         // authentication failed
-        $this->flash->addMessage("adminLoginFail", "Username/password is incorrect");
+        $this->flash->addMessage("dismissableFail", "Username/password is incorrect");
         return $response->withRedirect($router->pathFor('admin'));
     }
 })->setName("adminLogin");
@@ -104,7 +104,7 @@ $app->get('/logout', function($request, $response, $args) use ($session) {
         $session->logout();
 
         // redirect to homepage
-        $this->flash->addMessage("adminLoginSuccess", "You have successfully logged out");
+        $this->flash->addMessage("dismissableSuccess", "You have successfully logged out");
         return $response->withRedirect($router->pathFor('home'));
     }
     else {
@@ -137,24 +137,24 @@ $app->get('/delete/{id}', function ($request, $response, $args) use ($db, $sessi
 
 // Process delete entry form
 $app->post('/processDelete', function ($request, $response, $args) use ($db, $session) {
-    $router = $this->router;
-
     if($session->isLoggedIn()) {
         $id = (int)$this->request->getParam("id");
         $website = Website::findById($db, $id);
 
         if($website) {
             $website->delete();
-            $this->flash->addMessage("success", "Website entry has been deleted");
-            return $response->withRedirect($router->pathFor('home'));
+            $this->flash->addMessage("dismissableSuccess", "Website entry has been deleted");
+            return $response->withRedirect($session->getPrevPage());
         }
         else {
-            $this->flash->addMessage("fail", "Delete website entry failed");
+            $this->flash->addMessage("dismissableFail", "Delete website entry failed");
+            $router = $this->router;
             return $response->withRedirect($router->pathFor('error'));
         }
     }
     else {
         $this->flash->addMessage("fail", "You do not have permission to view this page");
+        $router = $this->router;
         return $response->withRedirect($router->pathFor('error'));
     }
 })->setName('processDelete');

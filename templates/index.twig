@@ -13,11 +13,11 @@
 </p>
 
 <section id="adminMessages">
-    {% for message in flash.message("adminLoginSuccess") %}
-        <p class="adminLoginSuccess">{{ message }} <button class="closeButton">x</button></p>
+    {% for message in flash.message("dismissableSuccess") %}
+        <p class="dismissableSuccess">{{ message }} <button class="closeButton">x</button></p>
     {% endfor %}
-    {% for message in flash.message("adminLoginFail") %}
-        <p class="adminLoginFail">{{ message }} <button class="closeButton">x</button></p>
+    {% for message in flash.message("dismissableFail") %}
+        <p class="dismissableFail">{{ message }} <button class="closeButton">x</button></p>
     {% endfor %}
 </section>
 
@@ -50,10 +50,13 @@
         {% else %}
             {% for latestResult in latestResults %}
                 {{ tables.tableSmallRow('#', 'rank', loop.index) }}
-                {{ tables.tableSmallRow('Full URL', 'fullURL', latestResult.url, true) }}
-                {{ tables.tableSmallRow('Custom URL', 'customURL',  baseURL ~ latestResult.shortname, true) }}
+                {{ tables.tableSmallRow('Full URL', 'fullURL', latestResult.url, latestResult.url) }}
+                {{ tables.tableSmallRow('Custom URL', 'customURL',  baseURL ~ latestResult.shortname, baseURL ~ latestResult.shortname) }}
                 {{ tables.tableSmallRow('Hits', 'hits', latestResult.hits) }}
                 {{ tables.tableSmallRow('Added', 'added', latestResult.added|slice(0,10)) }}
+                {% if isAdmin %}
+                    {{ tables.tableSmallRow('Delete', 'admin', 'Delete', path_for('deleteEntry', {'id': latestResult.id}))  }}
+                {% endif %}
                 <tr class="blankRow"><td colspan="2"></td></tr>
             {% endfor %}
         {% endif %}
@@ -66,10 +69,13 @@
         {% else %}
             {% for topResult in topResults %}
                 {{ tables.tableSmallRow('#', 'rank', loop.index) }}
-                {{ tables.tableSmallRow('Full URL', 'fullURL', topResult.url, true) }}
-                {{ tables.tableSmallRow('Custom URL', 'customURL', baseURL ~ topResult.shortname, true) }}
+                {{ tables.tableSmallRow('Full URL', 'fullURL', topResult.url, topResult.url) }}
+                {{ tables.tableSmallRow('Custom URL', 'customURL', baseURL ~ topResult.shortname, baseURL ~ topResult.shortname) }}
                 {{ tables.tableSmallRow('Hits', 'hits', topResult.hits) }}
                 {{ tables.tableSmallRow('Added', 'added', topResult.added|slice(0,10)) }}
+                {% if isAdmin %}
+                    {{ tables.tableSmallRow('Delete', 'admin', 'Delete', path_for('deleteEntry', {'id': topResult.id}))  }}
+                {% endif %}
                 <tr class="blankRow"><td colspan="2"></td></tr>
             {% endfor %}
         {% endif %}
@@ -121,5 +127,5 @@
 
 {% block scripts %}
     <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-    <script src="js/index.js"></script>
+    <script src="js/dismissMessages.js"></script>
 {% endblock %}

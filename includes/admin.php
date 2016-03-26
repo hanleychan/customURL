@@ -7,6 +7,9 @@ class Admin extends DatabaseObject {
     protected static $table_name = "admins";
     protected static $db_fields = array('id', 'username', 'password');
 
+    /**
+     * Returns an admin if object if it the username/password combination exists
+     */
     public static function authenticate($db, $username, $password) {
         $sql = "SELECT * FROM admins WHERE username = ? AND password = ? LIMIT 1";
         $paramArray = array($username, $password);

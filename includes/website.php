@@ -108,6 +108,9 @@ class Website extends DatabaseObject {
         }
     }
 
+    /**
+     * Returns the number of entries in the database after filtered by the specified filters
+     */
     public static function getNumEntriesFromFilter($db, $search="", $sort="added", $sortOrder="desc") {
         $safeSort = self::getSortColumnValue($sort);
         $safeSortOrder = self::getSortOrderValue($sortOrder);

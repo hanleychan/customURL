@@ -35,13 +35,17 @@ p#link {
   p#link a:hover {
     background-color: #ffd24d; }
 
-p.success, p.adminLoginSuccess, p.adminLoginFail {
+a#returnHome {
+  text-decoration: none;
+  color: #0000cc; }
+
+p.success, p.dismissableSuccess, p.dismissableFail {
   color: #009900; }
 
 p.fail {
   color: #ff3333; }
 
-p.adminLoginSuccess, p.adminLoginFail {
+p.dismissableSuccess, p.dismissableFail {
   border: solid 2px #009900;
   padding: 5px 20px;
   border-radius: 15px;
@@ -49,7 +53,7 @@ p.adminLoginSuccess, p.adminLoginFail {
   float: left;
   margin: 0 0 15px; }
 
-p.adminLoginFail {
+p.dismissableFail {
   color: #ff3333;
   border-color: #ff3333;
   clear: left; }
@@ -184,3 +188,14 @@ div#paginationSmall {
 /**
  * Admin login page styles
  */
+/**
+ * Delete Entry page styles
+ */
+form#deleteEntryForm ul#deleteEntryList li {
+  list-style: none; }
+  form#deleteEntryForm ul#deleteEntryList li span {
+    display: inline-block;
+    width: 120px;
+    font-weight: bold; }
+form#deleteEntryForm input#deleteButton {
+  margin-left: 2%; }
