@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once('includes/initialize.php');
+require_once('includes/classes/initialize.php');
 require_once('vendor/autoload.php');
 
 $db = new MySQLDatabase();
@@ -14,7 +14,7 @@ $container = $app->getContainer();
 
 // Register component on container
 $container['view'] = function ($container) {
-    $view = new \Slim\Views\Twig('templates', [
+    $view = new \Slim\Views\Twig('includes/templates', [
         'cache' => false 
     ]);
     $view->addExtension(new \Slim\Views\TwigExtension(

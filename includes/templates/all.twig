@@ -57,10 +57,10 @@
             <p>
                 {% if pages.hasPrevPage() %}
                     <a href="?page={{ pages.currentPage - 1 }}{% if search %}&search={{ search }}{% endif %}{% if not (sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{%if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}{% if displayItems and displayItems != 10 %}&displayItems={{ displayItems }}{% endif %}">
-                        <img src="images/leftArrow.png" alt="prevPage">
+                        <img src="includes/images/leftArrow.png" alt="prevPage">
                     </a>
                 {% else %}
-                    <img src="images/leftArrowGrey.png" alt="prevPage">
+                    <img src="includes/images/leftArrowGrey.png" alt="prevPage">
                 {% endif %}
                 <select id="pageSelectSmall" name="pageSelectSmall">
                 {% if pages.getNumPages() != 0 %}
@@ -71,10 +71,10 @@
                 </select>
                 {% if pages.hasNextPage() %}
                     <a href="?page={{ pages.currentPage + 1}}{% if search %}&search={{ search }}{% endif %}{% if not(sort == "added" and sortOrder == "desc") %}{% if sort %}&sort={{ sort }}{% endif %}{% if sortOrder %}&sortOrder={{ sortOrder }}{% endif %}{% endif %}{% if displayItems and displayItems != 10 %}&displayItems={{ displayItems }}{% endif %}">
-                        <img src="images/rightArrow.png" alt="nextPage">
+                        <img src="includes/images/rightArrow.png" alt="nextPage">
                     </a>
                 {% else %}
-                    <img src="images/rightArrowGrey.png" alt="nextPage">
+                    <img src="includes/images/rightArrowGrey.png" alt="nextPage">
                 {% endif %}
             </p>
         {% endif %}
@@ -197,7 +197,7 @@
     {% endif %}
     </script>
 
-    <script src="js/all.js"></script>
-    <script src="js/dismissMessages.js"></script>
+    <script src="includes/js/all.js"></script>
+    <script src="includes/js/dismissMessages.js"></script>
 {% endblock %}
 
