@@ -1,6 +1,4 @@
 <?php
-require_once("initialize.php");
-
 class Session {
     private $loggedIn = false;
     private $previousPage;
@@ -9,13 +7,13 @@ class Session {
     /**
      * Sets up session and loads previousPage
      */
-    public function __construct() {
+    public function __construct($baseURL = "/") {
         if(session_status() == PHP_SESSION_NONE) {
             session_start();
         }
 
         if(!isset($_SESSION["url"]["prevPage"])) {
-            $this->previousPage = BASE_URL;
+            $this->previousPage = $baseURL;
         }
         else {
             $this->previousPage = $_SESSION["url"]["prevPage"];

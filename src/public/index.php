@@ -1,11 +1,17 @@
 <?php
 session_start();
 
-require_once('../classes/initialize.php');
+
+require_once('../config.php');
 require_once('../vendor/autoload.php');
 
-$db = new MySQLDatabase();
-$session = new Session();
+// autoload classes
+spl_autoload_register(function($classname) {
+    require_once("../classes/" . $classname . ".php");
+});
+
+$db = new MySQLDatabase(DB_HOST, DB_NAME, DB_PORT, DB_USER, DB_PASS);
+$session = new Session(BASE_URL);
 $app = new \Slim\App();
 
 // Get container

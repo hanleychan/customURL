@@ -1,22 +1,20 @@
 <?php
-require_once("db_config.php");
-
 class MySQLDatabase {
     private $connection;
 
     /**
      * Setup database
      */
-    public function __construct() {
-        $this->openConnection();
+    public function __construct($host, $dbName, $port, $user, $password) {
+        $this->openConnection($host, $dbName, $port, $user,$password);
     }
 
     /**
      * Opens the the connection to the MySql database
      */
-    public function openConnection() {
+    public function openConnection($host, $dbName, $port, $user, $password) {
         try {
-            $this->connection = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";port=" . DB_PORT, DB_USER, DB_PASS );
+            $this->connection = new PDO("mysql:host=" . $host . ";dbname=" . $dbName . ";port=" . $port, $user, $password );
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->connection->exec("SET NAMES 'utf8'");
         }
