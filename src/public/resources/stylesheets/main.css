@@ -145,6 +145,8 @@ form#addWebsite, form#filterResultsForm, form#loginForm {
   form#addWebsite input[type="text"], form#filterResultsForm input[type="text"], form#loginForm input[type="text"] {
     display: block;
     width: 90%; }
+  form#addWebsite input[type="text"].formError, form#filterResultsForm input[type="text"].formError, form#loginForm input[type="text"].formError {
+    color: #ff3333; }
   form#addWebsite input[type="submit"], form#filterResultsForm input[type="submit"], form#loginForm input[type="submit"] {
     margin-top: 10px; }
   form#addWebsite fieldset, form#filterResultsForm fieldset, form#loginForm fieldset {

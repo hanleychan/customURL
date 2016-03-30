@@ -30,11 +30,27 @@ class Website extends DatabaseObject {
     }
   
     /**
-     * Returns whether a shortened URL name is valid
+     * Returns whether a custom name is valid
      */  
     public static function isValidName($name) {
+        if(self::isValidFormattedName($name) && !self::isReservedName($name)) {
+            return true;
+        }
+    }
+
+    /**
+     * Returns whether a custom name is a reserved keyword
+     */
+    public static function isReservedName($name) {
+        return in_array($name, self::UNALLOWED_NAMES) ? true : false;
+    }
+
+    /**
+     * Returns whether a custom name is in a valid format
+     */
+    public static function isValidFormattedName($name) {
         // name only contain letters, numbers, underscores, dashes and be less than MAX_SHORTNAME_LENGTH characters
-        if(preg_match("/^[a-zA-Z0-9_-]+$/", $name) && !in_array($name, self::UNALLOWED_NAMES) && strlen($name) <= self::MAX_SHORTNAME_LENGTH) {
+        if(preg_match("/^[a-zA-Z0-9_-]+$/", $name) && strlen($name) <= self::MAX_SHORTNAME_LENGTH) {
             return true;
         }
         else {

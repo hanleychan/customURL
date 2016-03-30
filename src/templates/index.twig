@@ -31,9 +31,9 @@
             {% endfor %}
 
             <label for="url">URL: </label>
-            <input type="text" id="url" name="url" maxlength="2083"{% if postData %} value="{{ postData.url }}"{% endif %} required><br>
+            <input type="text"{% if urlError %} class="formError"{% endif %} id="url" name="url" maxlength="2083"{% if postData %} value="{{ postData.url }}"{% endif %} required><br>
             <label for="shortName">Custom Name: </label>
-            <input type="text" id="shortName" name="shortName" maxlength="50"{% if postData %} value="{{ postData.shortName }}"{% endif %} required><br>
+            <input type="text"{% if nameError %} class="formError"{% endif %} id="shortName" name="shortName" maxlength="50"{% if postData %} value="{{ postData.shortName }}"{% endif %} required><br>
             <input type="submit" value="Add Website">
         </fieldset>
     </form>

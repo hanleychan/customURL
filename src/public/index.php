@@ -56,12 +56,23 @@ $app->get('/', function($request , $response, $args) use ($db, $session) {
     if(isset($_SESSION["postData"])) {
         $postData = $_SESSION["postData"];
         $_SESSION["postData"] = null;
+
+        $urlError = Website::isValidURL($postData["url"]) ? false : true; 
+        $nameError = Website::isValidName($postData["shortName"]) ?  false : true;
     }
     else {
         $postData = null;
+        $urlError = false;
+        $nameError = false;
     }
 
-    return $this->view->render($response, 'index.twig', compact("latestResults", "topResults", "baseURL", "postData", "isAdmin"));
+    return $this->view->render($response, 'index.twig', compact("latestResults",
+                                                                "topResults",
+                                                                "baseURL",
+                                                                "postData",
+                                                                "isAdmin",
+                                                                "urlError",
+                                                                "nameError"));
 })->setName('home');
 
 
@@ -140,6 +151,7 @@ $app->get('/delete/{id}', function ($request, $response, $args) use ($db, $sessi
     }
 })->setName('deleteEntry');
 
+
 // Process delete entry form
 $app->post('/processDelete', function ($request, $response, $args) use ($db, $session) {
     if($session->isLoggedIn()) {
@@ -172,10 +184,12 @@ $app->post('/processDelete', function ($request, $response, $args) use ($db, $se
     }
 })->setName('processDelete');
 
+
 // Page error route
 $app->get('/error', function($request, $response, $args) {
     return $this->view->render($response, 'error.twig');
 })->setName('error');
+
 
 // Show all entries page
 $app->get('/all', function($request, $response, $args) use ($db, $session) {
@@ -251,7 +265,14 @@ $app->get('/all', function($request, $response, $args) use ($db, $session) {
     }
     $session->updatePage($sessionPage);
 
-    return $this->view->render($response, 'all.twig', compact("allResults", "baseURL", "search", "sort", "sortOrder", "pages", "displayItems", "isAdmin"));
+    return $this->view->render($response, 'all.twig', compact("allResults",
+                                                              "baseURL",
+                                                              "search",
+                                                              "sort",
+                                                              "sortOrder",
+                                                              "pages",
+                                                              "displayItems",
+                                                              "isAdmin"));
 })->setName('all');
 
 
@@ -286,17 +307,20 @@ $app->post('/', function($request, $response, $args) use ($db) {
         $formError = true;
     }
 
-    // Make sure user entered a custom name in a valid format
-    if(!Website::isValidName($shortName)) {
-        $this->flash->addMessage('fail', 'Error: Invalid custom name');
+    if(!Website::isValidFormattedName($shortName)) {
+        // Make sure user entered a custom name in a valid format
+        $this->flash->addMessage('fail', 'Error: Invalid formatted custom name');
+        $formError = true;
+    }   
+    else if(Website::isReservedName($shortName)) {
+        // Make sure that custom name is not a reserved keyword
+        $this->flash->addMessage('fail', "Error: {$shortName} is a reserved keyword");
         $formError = true;
     }
-    else {
-        // Make sure custom name isn't already used
-        if(Website::getWebsiteByName($db, $shortName)) {
-            $this->flash->addMessage('fail', 'Error: Custom name already exists');
-            $formError = true;
-        }
+    else if(Website::getWebsiteByName($db, $shortName)) {
+        // Make sure that custom name is not already used
+        $this->flash->addMessage('fail', 'Error: Custom name already exists');
+        $formError = true;
     }
 
     // Create new database entry for the website if no errors with input data
