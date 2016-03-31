@@ -1,24 +1,24 @@
 <?php
 session_start();
 
-
+// load configuration variables
 require_once('../config.php');
-require_once('../vendor/autoload.php');
 
 // autoload classes
+require_once('../vendor/autoload.php');
 spl_autoload_register(function($classname) {
     require_once("../classes/" . $classname . ".php");
 });
 
-$db = new MySQLDatabase(DB_HOST, DB_NAME, DB_PORT, DB_USER, DB_PASS);
-$session = new Session(BASE_URL);
-$app = new \Slim\App();
+$config['displayErrorDetails'] = false;
+
+$app = new \Slim\App(["settings" => $config]);
 
 // Get container
 $container = $app->getContainer();
 
 
-// Register component on container
+// Register view component on container
 $container['view'] = function ($container) {
     $view = new \Slim\Views\Twig('../templates', [
         'cache' => false 
@@ -29,6 +29,20 @@ $container['view'] = function ($container) {
     ));
 
     return $view;
+};
+
+// Register db component on container
+$container['db'] = function ($container) {
+    $db = new MySQLDatabase(DB_HOST, DB_NAME, DB_PORT, DB_USER, DB_PASS);
+
+    return $db;
+};
+
+// Register session component on container
+$container['session'] = function ($container) {
+    $session = new Session(BASE_URL);
+
+    return $session;
 };
 
 
@@ -46,12 +60,12 @@ $app->add(function ($request, $response, $next) {
 
 
 // Homepage
-$app->get('/', function($request , $response, $args) use ($db, $session) {
-    $latestResults = Website::getLatest($db);
-    $topResults = Website::getTopHits($db);
+$app->get('/', function($request , $response, $args) {
+    $latestResults = Website::getLatest($this->db);
+    $topResults = Website::getTopHits($this->db);
     $baseURL = "http://" . $_SERVER["HTTP_HOST"] . BASE_URL; 
-    $isAdmin = $session->isLoggedIn() ? true : false;
-    $session->updatePage($this->router->pathFor('home'));
+    $isAdmin = $this->session->isLoggedIn() ? true : false;
+    $this->session->updatePage($this->router->pathFor('home'));
 
     if(isset($_SESSION["postData"])) {
         $postData = $_SESSION["postData"];
@@ -77,11 +91,11 @@ $app->get('/', function($request , $response, $args) use ($db, $session) {
 
 
 // Admin login route and redirect
-$app->get('/admin', function($request, $response, $args) use ($session) {
-    if($session->isLoggedIn()) {
+$app->get('/admin', function($request, $response, $args) {
+    if($this->session->isLoggedIn()) {
         // redirect to previous page if already logged in
         $this->flash->addMessage("dismissableFail", "You are already logged in");
-        return $response->withRedirect($session->getPrevPage());
+        return $response->withRedirect($this->session->getPrevPage());
     }
     else {
         // render login page
@@ -91,18 +105,18 @@ $app->get('/admin', function($request, $response, $args) use ($session) {
 
 
 // Process admin login form data
-$app->post('/admin', function($request, $response, $args) use ($db, $session) {
+$app->post('/admin', function($request, $response, $args) {
     $username = trim($request->getParam("username"));
     $password = trim($request->getParam("password"));
 
-    $admin = Admin::authenticate($db, $username, $password);
+    $admin = Admin::authenticate($this->db, $username, $password);
     $router = $this->router;
 
     if($admin) {
         // login user and redirect to previous page
-        $session->login($admin);
+        $this->session->login($admin);
         $this->flash->addMessage("dismissableSuccess", "You have successfully logged in");
-        return $response->withRedirect($session->getPrevPage());
+        return $response->withRedirect($this->session->getPrevPage());
     }
     else {
         // authentication failed
@@ -113,11 +127,11 @@ $app->post('/admin', function($request, $response, $args) use ($db, $session) {
 
 
 // Process logging out admin
-$app->get('/logout', function($request, $response, $args) use ($session) {
+$app->get('/logout', function($request, $response, $args) {
     $router = $this->router;
 
-    if($session->isLoggedIn()) {
-        $session->logout();
+    if($this->session->isLoggedIn()) {
+        $this->session->logout();
 
         // redirect to homepage
         $this->flash->addMessage("dismissableSuccess", "You have successfully logged out");
@@ -131,11 +145,11 @@ $app->get('/logout', function($request, $response, $args) use ($session) {
 
 
 // Delete an entry
-$app->get('/delete/{id}', function ($request, $response, $args) use ($db, $session) {
+$app->get('/delete/{id}', function ($request, $response, $args) {
     $id = (int)$args["id"];
 
-    if($session->isLoggedIn()) {
-        $website = Website::findById($db, $id);
+    if($this->session->isLoggedIn()) {
+        $website = Website::findById($this->db, $id);
         if($website) {
             return $this->view->render($response, "delete.twig", compact("website"));
         }
@@ -153,14 +167,14 @@ $app->get('/delete/{id}', function ($request, $response, $args) use ($db, $sessi
 
 
 // Process delete entry form
-$app->post('/processDelete', function ($request, $response, $args) use ($db, $session) {
-    if($session->isLoggedIn()) {
+$app->post('/processDelete', function ($request, $response, $args) {
+    if($this->session->isLoggedIn()) {
         $id = (int)$this->request->getParam("id");
-        $website = Website::findById($db, $id);
+        $website = Website::findById($this->db, $id);
 
         // redirect back to previous page if cancel button is clicked
         if($this->request->getParam("cancelButton")) {
-            return $response->withRedirect($session->getPrevPage());
+            return $response->withRedirect($this->session->getPrevPage());
         }
 
         // delete entry if delete button is clicked
@@ -168,12 +182,11 @@ $app->post('/processDelete', function ($request, $response, $args) use ($db, $se
             if($website) {
                 $website->delete();
                 $this->flash->addMessage("dismissableSuccess", "Website entry has been deleted");
-                return $response->withRedirect($session->getPrevPage());
+                return $response->withRedirect($this->session->getPrevPage());
             }
             else {
                 $this->flash->addMessage("dismissableFail", "Delete website entry failed");
-                $router = $this->router;
-                return $response->withRedirect($router->pathFor('error'));
+                return $response->withRedirect($this->session->getPrevPage());
             }
         }
     }
@@ -192,8 +205,8 @@ $app->get('/error', function($request, $response, $args) {
 
 
 // Show all entries page
-$app->get('/all', function($request, $response, $args) use ($db, $session) {
-    $isAdmin = $session->isLoggedIn() ? true : false;
+$app->get('/all', function($request, $response, $args) {
+    $isAdmin = $this->session->isLoggedIn() ? true : false;
 
     $baseURL = "http://" . $_SERVER["HTTP_HOST"] . BASE_URL;
 
@@ -205,10 +218,10 @@ $app->get('/all', function($request, $response, $args) use ($db, $session) {
     $validDisplayValues = array(5,10,20,50,100,"all");
 
     if($search || $sort || $sortOrder) {
-        $totalItems = Website::getNumEntriesFromFilter($db, $search, $sort, $sortOrder);
+        $totalItems = Website::getNumEntriesFromFilter($this->db, $search, $sort, $sortOrder);
     }
     else {
-        $totalItems = Website::getTotalEntries($db);
+        $totalItems = Website::getTotalEntries($this->db);
     }
 
     if($displayItems) {
@@ -232,10 +245,10 @@ $app->get('/all', function($request, $response, $args) use ($db, $session) {
     $offset = $pages->calculateOffset();
 
     if($search || $sort || $sortOrder) {
-        $allResults = Website::getByFilter($db, $limit, $offset,$search, $sort, $sortOrder);
+        $allResults = Website::getByFilter($this->db, $limit, $offset,$search, $sort, $sortOrder);
     }
     else {
-        $allResults = Website::getAllSorted($db, $limit, $offset);
+        $allResults = Website::getAllSorted($this->db, $limit, $offset);
     }
 
     $sessionPage = $this->router->pathFor('all');
@@ -263,7 +276,7 @@ $app->get('/all', function($request, $response, $args) use ($db, $session) {
             $sessionPage .= "{$getVariablesJoiner}displayItems={$displayItems}";
         }
     }
-    $session->updatePage($sessionPage);
+    $this->session->updatePage($sessionPage);
 
     return $this->view->render($response, 'all.twig', compact("allResults",
                                                               "baseURL",
@@ -277,10 +290,10 @@ $app->get('/all', function($request, $response, $args) use ($db, $session) {
 
 
 // Redirect to the specified url
-$app->get('/{name}', function($request, $response, $args) use ($db) {
+$app->get('/{name}', function($request, $response, $args) {
     $name = $args["name"];
 
-    if($website = Website::getWebsiteByName($db, $name)) {
+    if($website = Website::getWebsiteByName($this->db, $name)) {
         // update number of times redirection link has been used
         $website->hits += 1;
         $website->save();
@@ -296,7 +309,7 @@ $app->get('/{name}', function($request, $response, $args) use ($db) {
 
 
 // Process adding a new website
-$app->post('/', function($request, $response, $args) use ($db) {
+$app->post('/', function($request, $response, $args) {
     $url = Website::addScheme(trim($request->getParam('url')));
     $shortName = trim(strtolower($request->getParam('shortName')));
     $formError = false;
@@ -317,7 +330,7 @@ $app->post('/', function($request, $response, $args) use ($db) {
         $this->flash->addMessage('fail', "Error: {$shortName} is a reserved keyword");
         $formError = true;
     }
-    else if(Website::getWebsiteByName($db, $shortName)) {
+    else if(Website::getWebsiteByName($this->db, $shortName)) {
         // Make sure that custom name is not already used
         $this->flash->addMessage('fail', 'Error: Custom name already exists');
         $formError = true;
@@ -325,7 +338,7 @@ $app->post('/', function($request, $response, $args) use ($db) {
 
     // Create new database entry for the website if no errors with input data
     if(!$formError) {
-        $website = new Website($db);
+        $website = new Website($this->db);
         $website->url = $url;
         $website->shortname = $shortName;
         $website->hits = 0;
