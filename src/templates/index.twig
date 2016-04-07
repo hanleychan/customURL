@@ -53,7 +53,7 @@
                 {{ tables.tableSmallRow('Hits', 'hits', latestResult.hits) }}
                 {{ tables.tableSmallRow('Added', 'added', latestResult.added|slice(0,10)) }}
                 {% if isAdmin %}
-                    {{ tables.tableSmallRow('Delete', 'admin', 'Delete', path_for('deleteEntry', {'id': latestResult.id}))  }}
+                    {{ tables.tableSmallRow('Delete', 'admin', 'Delete', latestResult.id, true, page)  }}
                 {% endif %}
                 <tr class="blankRow"><td colspan="2"></td></tr>
             {% endfor %}
@@ -72,7 +72,7 @@
                 {{ tables.tableSmallRow('Hits', 'hits', topResult.hits) }}
                 {{ tables.tableSmallRow('Added', 'added', topResult.added|slice(0,10)) }}
                 {% if isAdmin %}
-                    {{ tables.tableSmallRow('Delete', 'admin', 'Delete', path_for('deleteEntry', {'id': topResult.id}))  }}
+                    {{ tables.tableSmallRow('Delete', 'admin', 'Delete', topResult.id, true, page)  }}
                 {% endif %}
                 <tr class="blankRow"><td colspan="2"></td></tr>
             {% endfor %}
@@ -95,7 +95,7 @@
             <tr><td colspan="6" class="noData">No Data</td></tr>
         {% else %}
             {% for latestResult in latestResults %}
-                {{ tables.tableBigRow(loop.index, latestResult.url, baseURL ~ latestResult.shortname, latestResult.hits, latestResult.added|slice(0,10), isAdmin, latestResult.id) }} 
+                {{ tables.tableBigRow(loop.index, latestResult.url, baseURL ~ latestResult.shortname, latestResult.hits, latestResult.added|slice(0,10), isAdmin, latestResult.id, page) }} 
             {% endfor %}
         {% endif %}
     </table>
@@ -116,7 +116,7 @@
             <tr><td colspan="6" class="noData">No Data</td></tr>
         {% else %}
             {% for topResult in topResults %}
-                {{ tables.tableBigRow(loop.index, topResult.url, baseURL ~ topResult.shortname, topResult.hits, topResult.added|slice(0,10), isAdmin, topResult.id) }}
+                {{ tables.tableBigRow(loop.index, topResult.url, baseURL ~ topResult.shortname, topResult.hits, topResult.added|slice(0,10), isAdmin, topResult.id, page) }}
             {% endfor %}
         {% endif %}
     </table>

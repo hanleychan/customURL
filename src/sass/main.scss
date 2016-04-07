@@ -130,6 +130,20 @@ table.smallTable {
     }
 
     td {
+        button {
+            background: none;
+            border: none;
+            font: inherit;
+            cursor: pointer;
+            width: 100%;
+            display: inline-block;
+            color: $linkColor;
+            padding: 5px 5px;
+            text-align: left;
+        }
+        button:hover {
+            background-color: pink;
+        }
         a {
             text-decoration: none;
             color: $linkColor;

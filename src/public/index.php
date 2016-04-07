@@ -65,7 +65,7 @@ $app->get('/', function($request , $response, $args) {
     $topResults = Website::getTopHits($this->db);
     $baseURL = "http://" . $_SERVER["HTTP_HOST"] . BASE_URL; 
     $isAdmin = $this->session->isLoggedIn() ? true : false;
-    $this->session->updatePage($this->router->pathFor('home'));
+    $page = $this->router->pathFor('home');
 
     if(isset($_SESSION["postData"])) {
         $postData = $_SESSION["postData"];
@@ -86,7 +86,8 @@ $app->get('/', function($request , $response, $args) {
                                                                 "postData",
                                                                 "isAdmin",
                                                                 "urlError",
-                                                                "nameError"));
+                                                                "nameError",
+                                                                "page"));
 })->setName('home');
 
 
@@ -164,6 +165,17 @@ $app->get('/delete/{id}', function ($request, $response, $args) {
         return $response->withRedirect($router->pathFor('error'));
     }
 })->setName('deleteEntry');
+
+
+// Delete entry link
+$app->post('/delete/{id}', function ($request, $response, $args) {
+    $id = (int)$args["id"];
+    $page = $request->getParam("page");
+    $this->session->updatePage($page);
+
+    $router = $this->router;
+    return $response->withRedirect($router->pathFor('deleteEntry', ["id"=>$id]));
+})->setName('deleteEntryLink');
 
 
 // Process delete entry form
@@ -276,7 +288,7 @@ $app->get('/all', function($request, $response, $args) {
             $sessionPage .= "{$getVariablesJoiner}displayItems={$displayItems}";
         }
     }
-    $this->session->updatePage($sessionPage);
+    $page = $sessionPage;
 
     return $this->view->render($response, 'all.twig', compact("allResults",
                                                               "baseURL",
@@ -285,7 +297,8 @@ $app->get('/all', function($request, $response, $args) {
                                                               "sortOrder",
                                                               "pages",
                                                               "displayItems",
-                                                              "isAdmin"));
+                                                              "isAdmin",
+                                                              "page"));
 })->setName('all');
 
 

@@ -1,11 +1,20 @@
-{% macro tableSmallRow(heading, class, value, link) %}
+{% macro tableSmallRow(heading, class, value, link, isButtonLink, page) %}
     <tr>
         <th>{{ heading }}</th>
+        {% if not isButtonLink %}
         <td class="{{ class }}">{% if link %}<a href="{{ link }}" title="{{ value }}">{% endif %}{{ value }}{% if link %}</a>{% endif %}</td>
+        {% else %}
+        <td class="{{ class }}">
+            <form action="{{ path_for('deleteEntry', {'id': link})  }}" method="post">
+                <input type="hidden" value="{{ page }}" name="page">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+        {% endif %}
     </tr>
 {% endmacro %}
 
-{% macro tableBigRow(rank, url, customURL, hits, added, isAdmin, id) %}
+{% macro tableBigRow(rank, url, customURL, hits, added, isAdmin, id, page) %}
     <tr>
         <td class="rank">{{ rank }}</td>
         <td class="fullURL"><a href="{{ url }}" title="{{ url }}">{{ url }}</a></td>
@@ -13,7 +22,12 @@
         <td class="hits">{{ hits }}</td>
         <td class="added">{{ added }}</td>
         {% if isAdmin == true and id  %}
-        <td class="admin"><a href="{{ path_for('deleteEntry', {'id' : id}) }}">Delete</a></td>
+        <td class="admin">
+            <form action="{{ path_for('deleteEntryLink', {'id': id}) }}" method="post">
+                <input type="hidden" value="{{ page }}" name="page">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
         {% endif %}
     </tr>
 {% endmacro %}

@@ -138,7 +138,7 @@
                 {{ macros.tableSmallRow('Hits', 'hits', result.hits) }}
                 {{ macros.tableSmallRow('Added', 'added', result.added|slice(0,10)) }}
                 {% if isAdmin %}
-                    {{ macros.tableSmallRow('Delete', 'admin', 'Delete', path_for('deleteEntry', {'id' : result.id})) }} 
+                    {{ macros.tableSmallRow('Delete', 'admin', 'Delete', result.id, true, page) }} 
                 {% endif %}
                 <tr class="blankRow"><td colspan="2"></td></tr>
             {% endfor %}
@@ -160,7 +160,7 @@
             <tr><td colspan="6" class="noData">No Data</td></tr>
         {% else %}
             {% for result in allResults %}
-                {{ macros.tableBigRow(loop.index + pages.calculateOffset(), result.url, baseURL ~ result.shortname, result.hits, result.added|slice(0,10), isAdmin, result.id) }} 
+                {{ macros.tableBigRow(loop.index + pages.calculateOffset(), result.url, baseURL ~ result.shortname, result.hits, result.added|slice(0,10), isAdmin, result.id, page) }} 
             {% endfor %}
         {% endif %}
     </table>

@@ -91,6 +91,18 @@ table.smallTable, table.bigTable {
     text-overflow: ellipsis;
     vertical-align: middle;
     white-space: nowrap; }
+    table.smallTable td button, table.bigTable td button {
+      background: none;
+      border: none;
+      font: inherit;
+      cursor: pointer;
+      width: 100%;
+      display: inline-block;
+      color: #0000cc;
+      padding: 5px 5px;
+      text-align: left; }
+    table.smallTable td button:hover, table.bigTable td button:hover {
+      background-color: pink; }
     table.smallTable td a, table.bigTable td a {
       text-decoration: none;
       color: #0000cc;
