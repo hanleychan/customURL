@@ -50,7 +50,11 @@ class Pagination {
      * Returns the total number of pages
      */
     public function getNumPages() {
-        return ceil($this->numItems / $this->numItemsPerPage);
+        if($this->numItems === 0) {
+            return 1;
+        } else {
+            return ceil($this->numItems / $this->numItemsPerPage);
+        }
     }
 
     public function calculateOffset() {
