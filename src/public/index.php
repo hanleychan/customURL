@@ -51,6 +51,13 @@ $container['flash'] = function () {
     return new \Slim\Flash\Messages();
 };
 
+// Override the default Not Found Handler
+$container['notFoundHandler'] = function ($c) {
+    return function ($request, $response) use ($c) {
+        return $c['view']->render($response, '404.twig', ['noMenu'=>true]); 
+    };
+};
+
 
 // Add middleware
 $app->add(function ($request, $response, $next) {
