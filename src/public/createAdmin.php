@@ -1,9 +1,17 @@
 <?php
-require_once("includes/initialize.php");
+require_once("../classes/MySQLDatabase.php");
+require_once("../classes/Admin.php");
+require_once("../classes/DatabaseObject.php");
 
-$db = new MySQLDatabase();
+$host = 'localhost';
+$dbName = 'url';
+$port = 3306;
+$user = 'hanley';
+$password = 'apple';
+
+$db = new MySQLDatabase($host, $dbName, $port, $user, $password);
 $username = "admin";
-$password = password_hash("secretpassword", PASSWORD_BCRYPT);
+$password = password_hash("secretPassword", PASSWORD_BCRYPT);
 
 $admin = new Admin($db);
 $admin->username = $username;

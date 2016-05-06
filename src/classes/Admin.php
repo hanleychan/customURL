@@ -1,4 +1,5 @@
 <?php
+require_once('DatabaseObject.php');
 class Admin extends DatabaseObject {
     public $id;
     public $username;
