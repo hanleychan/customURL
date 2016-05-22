@@ -1,6 +1,5 @@
 # customURL
-URL redirector
 
-Create custom links for redirecting to a website.
+A url redirector appliciation.  Create custom named urls for redirecting to a specified website.
 
-Link: http://www.hanleyc.com/url
+Application Link: http://url.hanleyc.com
